@@ -6,7 +6,7 @@
 
 A Vite plugin which inlines source files in HTML files where the `inline-source` attribute is present. This is similar in premise to [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile), but allows you to control which assets are inlined.
 
-This plugin was heavily influence by [markup-inline-loader](https://github.com/asnowwolf/markup-inline-loader) for webpack. I wanted the same functionality, but couldn't find a suitable replacement in the Vite ecosystem.
+This plugin was heavily influenced by [markup-inline-loader](https://github.com/asnowwolf/markup-inline-loader) for webpack. I wanted the same functionality, but couldn't find a suitable replacement in the Vite ecosystem.
 
 ## Example Usage
 
