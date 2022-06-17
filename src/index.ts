@@ -1,5 +1,6 @@
+import { readFile } from "node:fs/promises";
 import path from "node:path";
-import type { Plugin } from "vite";
+import type { IndexHtmlTransformContext, Plugin } from "vite";
 import type { OptimizedSvg } from "svgo";
 import { optimize } from "svgo";
 import type { TransformPluginContext } from "rollup";
@@ -27,8 +28,12 @@ type ParsedInlineSourceOptions = z.output<typeof InlineSourceOptionsSchema>;
 const PATTERN = /<([A-z0-9-]+)\s+([^>]*?)src\s*=\s*"([^>]*?)"([^>]*?)\s*\/>/gi;
 const getTransformFunction =
   (options: ParsedInlineSourceOptions) =>
-  async (source: string, ctx: TransformPluginContext, id?: string) => {
-    if (!id || !id.endsWith(".html")) {
+  async (
+    source: string,
+    ctx: TransformPluginContext | IndexHtmlTransformContext,
+    id?: string
+  ) => {
+    if (id && !id.endsWith(".html")) {
       return source;
     }
 
@@ -48,10 +53,15 @@ const getTransformFunction =
         continue;
       }
 
-      let fileContent =
-        // @ts-expect-error don't know these types aren't right
-        (await ctx.load({ id: `${fileName}?raw` })).ast?.body?.[0].declaration
-          .value;
+      let fileContent = (ctx as IndexHtmlTransformContext).server
+        ? await readFile(
+            `${
+              (ctx as IndexHtmlTransformContext).server!.config.root
+            }/${fileName}`
+          )
+        : // @ts-expect-error don't know these types aren't right
+          (await ctx.load({ id: `${fileName}?raw` })).ast?.body?.[0].declaration
+            .value;
       if (isSvgFile && options.optimizeSvgs) {
         const optimizedSvg = optimize(fileContent, options.svgoOptions);
         if (optimizedSvg.error) {
@@ -87,8 +97,8 @@ export default function VitePluginInlineSource(
     transform(source, id) {
       return transformHtml(source, this, id);
     },
-    // transformIndexHtml(source, ctx) {
-    //   return transformHtml(source, ctx);
-    // },
+    transformIndexHtml(source, ctx) {
+      return transformHtml(source, ctx);
+    },
   };
 }

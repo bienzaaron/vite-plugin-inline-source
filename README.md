@@ -44,7 +44,7 @@ body {
 
 Tags that should be replaced in the HTML file.
 
-For example, `style` tags are not replaced by default because the corresponding css would not contain the `style` tag. However, with `svg` tags, the corresponding svg file would contain the `svg` tag, so the `svg` tags in the HTML file are replaced. See the unit tests for examples.
+For example, `style` and `script` tags are not replaced by default because the corresponding css/js file would not contain the `style` or `script` tag. However, with `svg` tags, the corresponding svg file would contain the `svg` tag, so the `svg` tags in the HTML file are replaced. See the unit tests for more explicit examples.
 
 - **type**: `string[]`
 - **default**: `['svg', 'math']`
