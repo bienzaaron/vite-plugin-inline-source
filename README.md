@@ -35,12 +35,14 @@ body {
 ```
 
 **Resulting index.html after build**
+```html
 <html>
   <style inline-source>body {
   background-color: red;
 }
   </style>
 </html>
+```
 
 ## Options
 
