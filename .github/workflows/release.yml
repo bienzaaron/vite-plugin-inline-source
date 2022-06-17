@@ -22,7 +22,7 @@ jobs:
           run_install: false
       - run: pnpm install
       - run: pnpm ci
-      - run: pnpm publish
+      - run: pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Release
