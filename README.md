@@ -10,6 +10,8 @@ This plugin was heavily influence by [markup-inline-loader](https://github.com/a
 
 ## Example Usage
 
+Check out the interactive demo on [StackBlitz](https://stackblitz.com/edit/vite-cc3cbk?file=vite.config.js)!
+
 **vite.config.ts**
 ```typescript
 import { defineConfig } from "vite";
