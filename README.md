@@ -1,5 +1,9 @@
 # vite-plugin-inline-source
 
+![ci](https://github.com/bienzaaron/vite-plugin-inline-source/actions/workflows/ci/badge.svg)
+![npm version](https://img.shields.io/npm/v/vite-plugin-inline-source.svg?style=flat)
+
+
 A Vite plugin which inlines source files in HTML files where the `inline-source` attribute is present. This is similar in premise to [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile), but allows you to control which assets are inlined.
 
 ## Example Usage
