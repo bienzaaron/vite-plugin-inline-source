@@ -5,19 +5,21 @@ import { optimize } from "svgo";
 import type { TransformPluginContext } from "rollup";
 import z from "zod";
 
-const InlineSourceOptionsSchema = z.object({
-  replaceTags: z
-    .array(z.string())
-    .default(["svg", "math"])
-    .describe(
-      "Tags that should be replaced entirely when inlining elements. The default behavior is to"
-    ),
-  optimizeSvgs: z
-    .boolean()
-    .default(true)
-    .describe("Whether or not to optimize SVGs using svgo"),
-  svgoOptions: z.object({}).passthrough().default({}),
-});
+const InlineSourceOptionsSchema = z
+  .object({
+    replaceTags: z
+      .array(z.string())
+      .default(["svg", "math"])
+      .describe(
+        "Tags that should be replaced entirely when inlining elements. The default behavior is to"
+      ),
+    optimizeSvgs: z
+      .boolean()
+      .default(true)
+      .describe("Whether or not to optimize SVGs using svgo"),
+    svgoOptions: z.object({}).passthrough().default({}),
+  })
+  .default({});
 
 type InlineSourceOptions = z.input<typeof InlineSourceOptionsSchema>;
 type ParsedInlineSourceOptions = z.output<typeof InlineSourceOptionsSchema>;
