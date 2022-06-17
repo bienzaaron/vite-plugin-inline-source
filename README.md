@@ -1,6 +1,6 @@
 # vite-plugin-inline-source
 
-![ci](https://github.com/bienzaaron/vite-plugin-inline-source/actions/workflows/ci/badge.svg)
+![ci](https://github.com/bienzaaron/vite-plugin-inline-source/workflows/Node.js%20CI/badge.svg)
 ![npm version](https://img.shields.io/npm/v/vite-plugin-inline-source.svg?style=flat)
 
 
