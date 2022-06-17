@@ -1,0 +1,58 @@
+{
+  "name": "vite-plugin-inline-source",
+  "version": "1.0.0",
+  "description": "A vite plugin for inlining files into HTML",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "vite",
+    "plugin",
+    "markup",
+    "inline",
+    "css",
+    "svg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bienzaaron/vite-plugin-inline-source.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bienzaaron/vite-plugin-inline-source/issues"
+  },
+  "homepage": "https://github.com/bienzaaron/vite-plugin-inline-source#readme",
+  "author": "Aaron Bienz <bienzaaronj@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "ci": "pnpm lint && pnpm test && pnpm build",
+    "build": "tsc",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "svgo": "^2.8.0",
+    "tslib": "^2.4.0",
+    "zod": "^3.17.3"
+  },
+  "devDependencies": {
+    "@tsconfig/node16": "^1.0.3",
+    "@types/svgo": "^2.6.3",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "c8": "^7.11.3",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "prettier": "^2.7.0",
+    "rollup": "^2.75.6",
+    "typescript": "^4.7.3",
+    "vite": "^2.9.12",
+    "vitest": "^0.15.1"
+  },
+  "peerDependencies": {
+    "vite": "2.x"
+  }
+}

@@ -1,0 +1,133 @@
+// Vitest Snapshot v1
+
+exports[`custom replaceTags 1`] = `
+{
+  "output": [
+    {
+      "fileName": "abc.html",
+      "isAsset": true,
+      "name": "abc.html",
+      "source": "<div></div>",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "isAsset": true,
+      "name": undefined,
+      "source": "<html>
+<div></div></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`it then doesn't mess with tags it shouldn't mess with 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.css",
+      "isAsset": true,
+      "name": "style.css",
+      "source": "body { background-color: red; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "isAsset": true,
+      "name": undefined,
+      "source": "<html>
+<style inline-source  >body { background-color: red; }</style><img src=\\"lalala.png\\"/></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`it then inlines css and preserves style tags 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.css",
+      "isAsset": true,
+      "name": "style.css",
+      "source": "body { background-color: red; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "isAsset": true,
+      "name": undefined,
+      "source": "<html>
+<style inline-source  >body { background-color: red; }</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`it then inlines svg 1`] = `
+{
+  "output": [
+    {
+      "fileName": "i-am-an-svg.svg",
+      "isAsset": true,
+      "name": "i-am-an-svg.svg",
+      "source": "<svg viewBox=\\"0 0 100 100\\"><rect width=\\"100\\" height=\\"100\\"/></svg>",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "isAsset": true,
+      "name": undefined,
+      "source": "<html>
+<svg viewBox=\\"0 0 100 100\\"><rect width=\\"100\\" height=\\"100\\"/></svg></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`it then optimizes svg with custom options 2`] = `
+{
+  "output": [
+    {
+      "fileName": "i-am-an-svg.svg",
+      "isAsset": true,
+      "name": "i-am-an-svg.svg",
+      "source": "<!DOCTYPE svg PUBLIC \\"-//W3C//DTD SVG 1.1//EN\\" \\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\\"><svg viewBox=\\"0 0 100 100\\"><title>hello</title><rect width=\\"100\\" height=\\"100\\"/></svg>",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "isAsset": true,
+      "name": undefined,
+      "source": "<html>
+<!DOCTYPE svg PUBLIC \\"-//W3C//DTD SVG 1.1//EN\\" \\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\\"><svg viewBox=\\"0 0 100 100\\"><path d=\\"M0 0h100v100H0z\\"/></svg></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`it then optimizes svg with default options 1`] = `
+{
+  "output": [
+    {
+      "fileName": "i-am-an-svg.svg",
+      "isAsset": true,
+      "name": "i-am-an-svg.svg",
+      "source": "<svg viewBox=\\"0 0 100 100\\"><rect width=\\"100\\" height=\\"100\\"/></svg>",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "isAsset": true,
+      "name": undefined,
+      "source": "<html>
+<svg viewBox=\\"0 0 100 100\\"><path d=\\"M0 0h100v100H0z\\"/></svg></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;

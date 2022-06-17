@@ -1,0 +1,13 @@
+{
+  "extends": "@tsconfig/node16",
+  "include": [
+    "src",
+    ".eslintrc.js"
+  ],
+  "compilerOptions": {
+    "outDir": "dist",
+    "module": "commonjs",
+    "declaration": true,
+    "sourceMap": true
+  }
+}

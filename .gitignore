@@ -1,0 +1,7 @@
+node_modules
+*log
+dist
+.vscode
+*.tgz
+coverage
+test-report.json
