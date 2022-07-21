@@ -30,7 +30,7 @@
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run --coverage",
+    "test": "vitest run --coverage -u",
     "test:watch": "vitest"
   },
   "dependencies": {
@@ -49,7 +49,7 @@
     "prettier": "^2.7.1",
     "rollup": "^2.75.6",
     "typescript": "^4.7.4",
-    "vite": "^2.9.12",
+    "vite": "^3.0.2",
     "vitest": "^0.15.1"
   },
   "peerDependencies": {
