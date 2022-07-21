@@ -26,7 +26,7 @@
   "author": "Aaron Bienz <bienzaaronj@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "ci": "pnpm lint && pnpm test && pnpm build",
+    "ci": "npm run lint && npm run test && npm run build",
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",

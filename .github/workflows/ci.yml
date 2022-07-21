@@ -20,10 +20,5 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: pnpm/action-setup@v2.0.1
-        name: Install pnpm
-        with:
-          version: 7
-          run_install: false
-      - run: pnpm install
-      - run: pnpm ci
+      - run: npm install
+      - run: npm run ci

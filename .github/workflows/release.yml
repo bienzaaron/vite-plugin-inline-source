@@ -15,14 +15,9 @@ jobs:
         with:
           node-version: "16.x"
           registry-url: "https://registry.npmjs.org"
-      - uses: pnpm/action-setup@v2.0.1
-        name: Install pnpm
-        with:
-          version: 7
-          run_install: false
-      - run: pnpm install
-      - run: pnpm ci
-      - run: pnpm publish --no-git-checks
+      - run: npm install
+      - run: npm run ci
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Release
