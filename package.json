@@ -30,7 +30,7 @@
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "vitest run --coverage",
+    "test": "vitest run --coverage -u",
     "test:watch": "vitest"
   },
   "dependencies": {
