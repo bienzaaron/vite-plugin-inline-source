@@ -109,7 +109,13 @@ test("fails gracefully when svg optimization fails", () => {
         inlineSource({}),
       ],
     });
-  }).rejects.toThrowErrorMatchingInlineSnapshot('"expected is not a function"');
+  }).rejects.toThrowErrorMatchingInlineSnapshot(`
+    "SVG optimization failed SvgoParserError: <input>:1:35: Attribute without value
+
+    > 1 | <svg viewBox=\\"0 0 100 100\\"><not a valid svg></svg>
+        |                                   ^
+    "
+  `);
 });
 
 test("it then optimizes svg with custom options", async () => {
