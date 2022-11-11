@@ -64,6 +64,9 @@ const getTransformFunction =
       if (isSvgFile && options.optimizeSvgs) {
         fileContent = optimize(fileContent, options.svgoOptions).data;
       }
+
+      fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");
+
       if (index !== prevPos) {
         result.push(source.slice(prevPos, index));
       }

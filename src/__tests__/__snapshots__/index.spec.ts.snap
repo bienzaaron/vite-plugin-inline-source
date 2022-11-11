@@ -98,7 +98,7 @@ exports[`it then optimizes svg with custom options 2`] = `
       "fileName": "index.html",
       "isAsset": true,
       "name": undefined,
-      "source": "<html><!DOCTYPE svg PUBLIC \\"-//W3C//DTD SVG 1.1//EN\\" \\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\\"><svg viewBox=\\"0 0 100 100\\"><path d=\\"M0 0h100v100H0z\\"/></svg></html>",
+      "source": "<html><svg viewBox=\\"0 0 100 100\\"><path d=\\"M0 0h100v100H0z\\"/></svg></html>",
       "type": "asset",
     },
   ],
