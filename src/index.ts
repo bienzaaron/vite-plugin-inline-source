@@ -1,7 +1,6 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { IndexHtmlTransformContext, Plugin } from "vite";
-import type { OptimizedSvg } from "svgo";
 import { optimize } from "svgo";
 import type { TransformPluginContext } from "rollup";
 import z from "zod";
@@ -53,7 +52,7 @@ const getTransformFunction =
         continue;
       }
 
-      let fileContent = (ctx as IndexHtmlTransformContext).server
+      let fileContent: string = (ctx as IndexHtmlTransformContext).server
         ? await readFile(
             `${
               (ctx as IndexHtmlTransformContext).server!.config.root
@@ -63,11 +62,7 @@ const getTransformFunction =
           (await ctx.load({ id: `${fileName}?raw` })).ast?.body?.[0].declaration
             .value;
       if (isSvgFile && options.optimizeSvgs) {
-        const optimizedSvg = optimize(fileContent, options.svgoOptions);
-        if (optimizedSvg.error) {
-          throw new Error(`SVG optimization failed ${optimizedSvg.error}`);
-        }
-        fileContent = (optimizedSvg as OptimizedSvg).data;
+        fileContent = optimize(fileContent, options.svgoOptions).data;
       }
       if (index !== prevPos) {
         result.push(source.slice(prevPos, index));

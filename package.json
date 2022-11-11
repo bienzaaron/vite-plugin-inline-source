@@ -34,13 +34,12 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "svgo": "^2.8.0",
+    "svgo": "^3.0.1",
     "tslib": "^2.4.1",
     "zod": "^3.19.1"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
-    "@types/svgo": "^2.6.3",
     "@typescript-eslint/eslint-plugin": "^5.42.1",
     "@typescript-eslint/parser": "^5.42.1",
     "@vitest/coverage-c8": "^0.25.1",
