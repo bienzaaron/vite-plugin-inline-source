@@ -24,7 +24,8 @@ const InlineSourceOptionsSchema = z
 type InlineSourceOptions = z.input<typeof InlineSourceOptionsSchema>;
 type ParsedInlineSourceOptions = z.output<typeof InlineSourceOptionsSchema>;
 
-const PATTERN = /<([A-z0-9-]+)\s+([^>]*?)src\s*=\s*"([^>]*?)"([^>]*?)\s*\/>/gi;
+const PATTERN =
+  /<([A-z0-9-]+)\s+([^>]*?)src\s*=\s*"([^>]*?)"([^>]*?)\s*((\/>)|(>\s*<\/\s*\1\s*>))/gi;
 const getTransformFunction =
   (options: ParsedInlineSourceOptions) =>
   async (
@@ -53,11 +54,13 @@ const getTransformFunction =
       }
 
       let fileContent: string = (ctx as IndexHtmlTransformContext).server
-        ? await readFile(
-            `${
-              (ctx as IndexHtmlTransformContext).server!.config.root
-            }/${fileName}`
-          )
+        ? (
+            await readFile(
+              `${
+                (ctx as IndexHtmlTransformContext).server!.config.root
+              }/${fileName}`
+            )
+          ).toString()
         : // @ts-expect-error don't know these types aren't right
           (await ctx.load({ id: `${fileName}?raw` })).ast?.body?.[0].declaration
             .value;
