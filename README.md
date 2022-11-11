@@ -34,7 +34,7 @@ body {
 **index.html**
 ```html
 <html>
-  <style inline-source src="style.css" />
+  <style inline-source src="style.css"></style>
 </html>
 ```
 

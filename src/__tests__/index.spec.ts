@@ -32,7 +32,7 @@ test("it then inlines css and preserves style tags", async () => {
     plugins: [
       emitTestAssetPlugin("style.css", "body { background-color: red; }"),
       replaceIndexHtmlPlugin(
-        '<html><style inline-source src="style.css" /></html>'
+        '<html><style inline-source src="style.css" ></ style ></html>'
       ),
       inlineSource({
         optimizeSvgs: false,
@@ -109,7 +109,9 @@ test("fails gracefully when svg optimization fails", () => {
         inlineSource({}),
       ],
     });
-  }).rejects.toThrowErrorMatchingInlineSnapshot('"<input>:1:35: Attribute without value"');
+  }).rejects.toThrowErrorMatchingInlineSnapshot(
+    '"<input>:1:35: Attribute without value"'
+  );
 });
 
 test("it then optimizes svg with custom options", async () => {
