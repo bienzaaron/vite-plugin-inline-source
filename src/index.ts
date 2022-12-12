@@ -74,10 +74,23 @@ const getTransformFunction =
         result.push(source.slice(prevPos, index));
       }
       if (options.replaceTags.includes(tagName)) {
-        result.push(fileContent);
+        result.push(
+          fileContent.replace(
+            new RegExp(`^<\\s*${tagName}`),
+            `<${tagName} ${preAttributes.replace(
+              /inline-source/g,
+              ""
+            )} ${postAttributes.replace(/inline-source/g, "")}`
+          )
+        );
       } else {
         result.push(
-          `<${tagName} ${preAttributes} ${postAttributes}>${fileContent}</${tagName}>`
+          `<${tagName}
+            ${preAttributes.replace(
+              /inline-source/g,
+              ""
+            )} ${postAttributes.replace(/inline-source/g, "")}
+          >${fileContent}</${tagName}>`
         );
       }
 
