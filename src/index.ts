@@ -76,7 +76,7 @@ const getTransformFunction =
       if (options.replaceTags.includes(tagName)) {
         result.push(
           fileContent.replace(
-            new RegExp(`^<\s*${tagName}`),
+            new RegExp(`^<\\s*${tagName}`),
             `<${tagName} ${preAttributes.replaceAll(
               "inline-source",
               ""
