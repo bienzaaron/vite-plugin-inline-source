@@ -77,19 +77,19 @@ const getTransformFunction =
         result.push(
           fileContent.replace(
             new RegExp(`^<\\s*${tagName}`),
-            `<${tagName} ${preAttributes.replaceAll(
-              "inline-source",
+            `<${tagName} ${preAttributes.replace(
+              /inline-source/g,
               ""
-            )} ${postAttributes.replaceAll("inline-source", "")}`
+            )} ${postAttributes.replace(/inline-source/g, "")}`
           )
         );
       } else {
         result.push(
           `<${tagName}
-            ${preAttributes.replaceAll(
-              "inline-source",
+            ${preAttributes.replace(
+              /inline-source/g,
               ""
-            )} ${postAttributes.replaceAll("inline-source", "")}
+            )} ${postAttributes.replace(/inline-source/g, "")}
           >${fileContent}</${tagName}>`
         );
       }
