@@ -15,7 +15,7 @@ const emitTestAssetPlugin = (fileName: string, source: string): Plugin => ({
     });
   },
   load(id) {
-    if (id.split("?")[0] === fileName) {
+    if (id.split("?")[0].endsWith(fileName)) {
       return `export default '${source}'`;
     }
   },

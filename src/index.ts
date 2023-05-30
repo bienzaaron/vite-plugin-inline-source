@@ -11,7 +11,7 @@ const InlineSourceOptionsSchema = z
       .array(z.string())
       .default(["svg", "math"])
       .describe(
-        "Tags that should be replaced entirely when inlining elements. The default behavior is to"
+        "Tags that should be replaced entirely when inlining elements. The default behavior is to preserve the tags and place the content from the source file inside them."
       ),
     optimizeSvgs: z
       .boolean()
@@ -22,17 +22,21 @@ const InlineSourceOptionsSchema = z
   .default({});
 
 type InlineSourceOptions = z.input<typeof InlineSourceOptionsSchema>;
-type ParsedInlineSourceOptions = z.output<typeof InlineSourceOptionsSchema>;
 
 const PATTERN =
   /<([A-z0-9-]+)\s+([^>]*?)src\s*=\s*"([^>]*?)"([^>]*?)\s*((\/>)|(>\s*<\/\s*\1\s*>))/gi;
-const getTransformFunction =
-  (options: ParsedInlineSourceOptions) =>
-  async (
+
+export default function VitePluginInlineSource(
+  opts: InlineSourceOptions
+): Plugin {
+  const options = InlineSourceOptionsSchema.parse(opts);
+  let root = "";
+
+  async function transformHtml(
     source: string,
     ctx: TransformPluginContext | IndexHtmlTransformContext,
     id?: string
-  ) => {
+  ) {
     if (id && !id.endsWith(".html")) {
       return source;
     }
@@ -53,16 +57,12 @@ const getTransformFunction =
         continue;
       }
 
+      const filePath = root ? path.join(root, fileName) : fileName;
+
       let fileContent: string = (ctx as IndexHtmlTransformContext).server
-        ? (
-            await readFile(
-              `${
-                (ctx as IndexHtmlTransformContext).server!.config.root
-              }/${fileName}`
-            )
-          ).toString()
+        ? (await readFile(`${filePath}`)).toString()
         : // @ts-expect-error don't know these types aren't right
-          (await ctx.load({ id: `${fileName}?raw` })).ast?.body?.[0].declaration
+          (await ctx.load({ id: `${filePath}?raw` })).ast?.body?.[0].declaration
             .value;
       if (isSvgFile && options.optimizeSvgs) {
         fileContent = optimize(fileContent, options.svgoOptions).data;
@@ -98,16 +98,13 @@ const getTransformFunction =
     }
     result.push(source.slice(prevPos));
     return result.join("");
-  };
+  }
 
-export default function VitePluginInlineSource(
-  opts: InlineSourceOptions
-): Plugin {
-  const transformHtml = getTransformFunction(
-    InlineSourceOptionsSchema.parse(opts)
-  );
   return {
     name: "vite-plugin-inline-source",
+    configResolved(config) {
+      root = config.root ?? "";
+    },
     transform(source, id) {
       return transformHtml(source, this, id);
     },
