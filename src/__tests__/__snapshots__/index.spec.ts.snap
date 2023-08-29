@@ -130,7 +130,7 @@ exports[`it then optimizes svg with default options 1`] = `
 }
 `;
 
-exports[`it works without any options  1`] = `
+exports[`it works without any options 1`] = `
 {
   "output": [
     {
