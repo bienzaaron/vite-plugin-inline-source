@@ -42,7 +42,7 @@ test("it then inlines css and preserves style tags", async () => {
   expect(buildOutput).toMatchSnapshot();
 });
 
-test("it works without any options ", async () => {
+test("it works without any options", async () => {
   const buildOutput = await build({
     root: __dirname,
     plugins: [
