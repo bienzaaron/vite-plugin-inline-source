@@ -27,7 +27,7 @@ const PATTERN =
   /<([A-z0-9-]+)\s+([^>]*?)src\s*=\s*"([^>]*?)"([^>]*?)\s*((\/>)|(>\s*<\/\s*\1\s*>))/gi;
 
 export default function VitePluginInlineSource(
-  opts: InlineSourceOptions
+  opts?: InlineSourceOptions
 ): Plugin {
   const options = InlineSourceOptionsSchema.parse(opts);
   let root = "";

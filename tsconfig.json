@@ -1,13 +1,11 @@
 {
-  "extends": "@tsconfig/node16",
+  "extends": "@tsconfig/node18",
   "include": [
     "src",
     ".eslintrc.js"
   ],
   "compilerOptions": {
     "outDir": "dist",
-    "module": "commonjs",
-    "declaration": true,
-    "sourceMap": true
+    "noEmit": true,
   }
 }
