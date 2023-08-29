@@ -6,8 +6,6 @@
   ],
   "compilerOptions": {
     "outDir": "dist",
-    "module": "commonjs",
-    "declaration": true,
-    "sourceMap": true
+    "noEmit": true,
   }
 }

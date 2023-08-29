@@ -1,7 +1,7 @@
 import type { Plugin } from "vite";
 import { test, expect } from "vitest";
 import { build } from "vite";
-import inlineSource from "../";
+import inlineSource from "../index.js";
 
 const emitTestAssetPlugin = (fileName: string, source: string): Plugin => ({
   name: "test-asset-plugin",
@@ -37,6 +37,20 @@ test("it then inlines css and preserves style tags", async () => {
       inlineSource({
         optimizeSvgs: false,
       }),
+    ],
+  });
+  expect(buildOutput).toMatchSnapshot();
+});
+
+test("it works without any options ", async () => {
+  const buildOutput = await build({
+    root: __dirname,
+    plugins: [
+      emitTestAssetPlugin("style.css", "body { background-color: red; }"),
+      replaceIndexHtmlPlugin(
+        '<html><style inline-source i-should-be-preserved src="style.css" ></ style ></html>'
+      ),
+      inlineSource(),
     ],
   });
   expect(buildOutput).toMatchSnapshot();
