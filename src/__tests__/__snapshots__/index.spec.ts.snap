@@ -1,5 +1,75 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`css > it then NOT minifies css with default options 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.css",
+      "name": "style.css",
+      "needsCodeReference": false,
+      "source": "/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`css > it then minifies css with optimizeCss enabled 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.css",
+      "name": "style.css",
+      "needsCodeReference": false,
+      "source": "/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >/*! foo */
+body{background-color:red}h1{color:#dc143c;font-size:28px}</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`css > it then minifies css with optimizeCss enabled, respecting cssoOptions 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.css",
+      "name": "style.css",
+      "needsCodeReference": false,
+      "source": "/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >body{background-color:red}h1{color:#dc143c;font-size:28px}</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
 exports[`custom replaceTags 1`] = `
 {
   "output": [
@@ -147,6 +217,75 @@ exports[`it works without any options 1`] = `
       "source": "<html><style
              i-should-be-preserved  
           >body { background-color: red; }</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`js > it then NOT minifies js with default options 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.js",
+      "name": "script.js",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo = 123;const bar = 256;const baz = typeof u !== \\"undefined\\" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >/* foo */ const u = undefined;const foo = 123;const bar = 256;const baz = typeof u !== \\"undefined\\" ? foo : bar;</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`js > it then minifies css with optimizeJs enabled, respecting terserOptions 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.js",
+      "name": "script.js",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo = 123;const bar = 256;const baz = typeof u !== \\"undefined\\" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u=void 0;const foo=123;const bar=256;const baz=256;</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`js > it then minifies js with optimizeJs enabled 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.js",
+      "name": "script.js",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo = 123;const bar = 256;const baz = typeof u !== \\"undefined\\" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u=void 0,foo=123,bar=256,baz=256;</script></html>",
       "type": "asset",
     },
   ],

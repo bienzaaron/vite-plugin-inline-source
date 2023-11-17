@@ -1,5 +1,5 @@
 import type { Plugin } from "vite";
-import { test, expect } from "vitest";
+import { test, describe, expect } from "vitest";
 import { build } from "vite";
 import inlineSource from "../index.js";
 
@@ -157,6 +157,158 @@ test("it then optimizes svg with custom options", async () => {
   });
   expect(buildOutput).toMatchSnapshot();
 });
+
+describe('css', () => {
+  const cssFileName = "style.css";
+  const cssContent =
+      // language=css
+      '/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }';
+
+  test("it then NOT minifies css with default options", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(cssFileName, cssContent),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`
+        ),
+        inlineSource(),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it then minifies css with optimizeCss enabled", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(cssFileName, cssContent),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`
+        ),
+        inlineSource({
+          optimizeCss: true,
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it then minifies css with optimizeCss enabled, respecting cssoOptions", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(cssFileName, cssContent),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`
+        ),
+        inlineSource({
+          optimizeCss: true,
+          cssoOptions: {
+            comments: false,
+          }
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test('fails gracefully when css minification fails', () => {
+    expect(async () => {
+      await build({
+        root: __dirname,
+        plugins: [
+          emitTestAssetPlugin(cssFileName, 'not a valid css'),
+          replaceIndexHtmlPlugin(
+            `<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`
+          ),
+          inlineSource({
+            optimizeCss: true,
+          }),
+        ],
+      });
+    }).rejects.toThrowErrorMatchingInlineSnapshot(
+      '"Failed to minify CSS"'
+    );
+  })
+})
+
+describe('js', () => {
+  const jsFileName = "script.js";
+  const jsContent =
+    // language=js
+    '/* foo */ const u = undefined;const foo = 123;const bar = 256;const baz = typeof u !== "undefined" ? foo : bar;';
+
+  test("it then NOT minifies js with default options", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(jsFileName, jsContent),
+        replaceIndexHtmlPlugin(
+          `<html><script inline-source i-should-be-preserved src="${jsFileName}" /></html>`
+        ),
+        inlineSource(),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it then minifies js with optimizeJs enabled", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(jsFileName, jsContent),
+        replaceIndexHtmlPlugin(
+          `<html><script inline-source i-should-be-preserved src="${jsFileName}" /></html>`
+        ),
+        inlineSource({
+          optimizeJs: true,
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it then minifies css with optimizeJs enabled, respecting terserOptions", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(jsFileName, jsContent),
+        replaceIndexHtmlPlugin(
+          `<html><script inline-source i-should-be-preserved src="${jsFileName}" /></html>`
+        ),
+        inlineSource({
+          optimizeJs: true,
+          terserOptions: {
+            compress: {
+              join_vars: false,
+            },
+          }
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test('fails gracefully when js minification fails', () => {
+    expect(async () => {
+      await build({
+        root: __dirname,
+        plugins: [
+          emitTestAssetPlugin(jsFileName, 'not a valid js'),
+          replaceIndexHtmlPlugin(
+            `<html><script inline-source i-should-be-preserved src="${jsFileName}" /></html>`
+          ),
+          inlineSource({
+            optimizeJs: true,
+          }),
+        ],
+      });
+    }).rejects.toThrowErrorMatchingInlineSnapshot(
+      '"Unexpected token: name (a)"'
+    );
+  })
+})
 
 test("custom replaceTags", async () => {
   const buildOutput = await build({
