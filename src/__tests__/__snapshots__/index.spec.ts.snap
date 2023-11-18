@@ -291,3 +291,26 @@ exports[`js > it then minifies js with optimizeJs enabled 1`] = `
   ],
 }
 `;
+
+exports[`js > it then minifies js with optimizeJs enabled, respecting terserOptions 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.js",
+      "name": "script.js",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo = 123;const bar = 256;const baz = typeof u !== \\"undefined\\" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u=void 0;const foo=123;const bar=256;const baz=256;</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;

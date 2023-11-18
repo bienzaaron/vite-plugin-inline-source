@@ -158,11 +158,11 @@ test("it then optimizes svg with custom options", async () => {
   expect(buildOutput).toMatchSnapshot();
 });
 
-describe('css', () => {
+describe("css", () => {
   const cssFileName = "style.css";
   const cssContent =
-      // language=css
-      '/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }';
+    // language=css
+    "/*! foo */ body { background-color: #ff0000; } /* bar */ h1 { color: crimson; font-size: 28px; }";
 
   test("it then NOT minifies css with default options", async () => {
     const buildOutput = await build({
@@ -206,19 +206,19 @@ describe('css', () => {
           optimizeCss: true,
           cssoOptions: {
             comments: false,
-          }
+          },
         }),
       ],
     });
     expect(buildOutput).toMatchSnapshot();
   });
 
-  test('fails gracefully when css minification fails', () => {
+  test("fails gracefully when css minification fails", () => {
     expect(async () => {
       await build({
         root: __dirname,
         plugins: [
-          emitTestAssetPlugin(cssFileName, 'not a valid css'),
+          emitTestAssetPlugin(cssFileName, "not a valid css"),
           replaceIndexHtmlPlugin(
             `<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`
           ),
@@ -227,13 +227,11 @@ describe('css', () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot(
-      '"Failed to minify CSS"'
-    );
-  })
-})
+    }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
+  });
+});
 
-describe('js', () => {
+describe("js", () => {
   const jsFileName = "script.js";
   const jsContent =
     // language=js
@@ -269,7 +267,7 @@ describe('js', () => {
     expect(buildOutput).toMatchSnapshot();
   });
 
-  test("it then minifies css with optimizeJs enabled, respecting terserOptions", async () => {
+  test("it then minifies js with optimizeJs enabled, respecting terserOptions", async () => {
     const buildOutput = await build({
       root: __dirname,
       plugins: [
@@ -283,19 +281,19 @@ describe('js', () => {
             compress: {
               join_vars: false,
             },
-          }
+          },
         }),
       ],
     });
     expect(buildOutput).toMatchSnapshot();
   });
 
-  test('fails gracefully when js minification fails', () => {
+  test("fails gracefully when js minification fails", () => {
     expect(async () => {
       await build({
         root: __dirname,
         plugins: [
-          emitTestAssetPlugin(jsFileName, 'not a valid js'),
+          emitTestAssetPlugin(jsFileName, "not a valid js"),
           replaceIndexHtmlPlugin(
             `<html><script inline-source i-should-be-preserved src="${jsFileName}" /></html>`
           ),
@@ -307,8 +305,8 @@ describe('js', () => {
     }).rejects.toThrowErrorMatchingInlineSnapshot(
       '"Unexpected token: name (a)"'
     );
-  })
-})
+  });
+});
 
 test("custom replaceTags", async () => {
   const buildOutput = await build({
