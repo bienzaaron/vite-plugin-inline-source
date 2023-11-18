@@ -1,7 +1,9 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import type { IndexHtmlTransformContext, Plugin } from "vite";
-import { optimize } from "svgo";
+import { optimize as optimizeSvg } from "svgo";
+import { minify as minifyCss } from "csso";
+import { minify as minifyJs } from "terser";
 import type { TransformPluginContext } from "rollup";
 import z from "zod";
 
@@ -17,7 +19,17 @@ const InlineSourceOptionsSchema = z
       .boolean()
       .default(true)
       .describe("Whether or not to optimize SVGs using svgo"),
+    optimizeCss: z
+      .boolean()
+      .default(false)
+      .describe("Whether or not to optimize CSS using csso"),
+    optimizeJs: z
+      .boolean()
+      .default(false)
+      .describe("Whether or not to optimize JS using terser"),
     svgoOptions: z.object({}).passthrough().default({}),
+    cssoOptions: z.object({}).passthrough().default({}),
+    terserOptions: z.object({}).passthrough().default({}),
   })
   .default({});
 
@@ -48,6 +60,8 @@ export default function VitePluginInlineSource(
       const [matched, tagName, preAttributes, fileName, postAttributes] = token;
       const { index } = token;
       const isSvgFile = path.extname(fileName).toLowerCase() === ".svg";
+      const isCssFile = path.extname(fileName).toLowerCase() === ".css";
+      const isJsFile = path.extname(fileName).toLowerCase() === ".js";
       const isImg = tagName.toLowerCase() === "img";
       const shouldInline = /\binline-source\b/.test(
         preAttributes + " " + postAttributes
@@ -65,7 +79,18 @@ export default function VitePluginInlineSource(
           (await ctx.load({ id: `${filePath}?raw` })).ast?.body?.[0].declaration
             .value;
       if (isSvgFile && options.optimizeSvgs) {
-        fileContent = optimize(fileContent, options.svgoOptions).data;
+        fileContent = optimizeSvg(fileContent, options.svgoOptions).data;
+      } else if (isCssFile && options.optimizeCss) {
+        const minifiedCode = minifyCss(fileContent, options.cssoOptions).css
+        if (minifiedCode.length === 0 && fileContent.length !== 0) {
+          throw new Error('Failed to minify CSS')
+        }
+        fileContent = minifiedCode
+      } else if (isJsFile && options.optimizeJs) {
+        const minifiedCode = (await minifyJs(fileContent, options.terserOptions)).code;
+        if (minifiedCode) {
+          fileContent = minifiedCode;
+        }
       }
 
       fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");

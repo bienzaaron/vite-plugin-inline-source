@@ -72,3 +72,31 @@ Options to pass to [svgo](https://github.com/svg/svgo). Only used if `optimizeSv
 
 - **type**: `OptimizeOptions`
 - **default**: `{}`
+
+### optimizeCss
+
+Whether or not to optimize CSS using [csso](https://github.com/css/csso).
+
+- **type**: `boolean`
+- **default**: `false`
+
+### cssoOptions
+
+Options to pass to [csso](https://github.com/css/csso). Only used if `optimizeCss` is `true`.
+
+- **type**: `OptimizeOptions`
+- **default**: `{}`
+
+### optimizeJs
+
+Whether or not to optimize JS using [terser](https://github.com/terser/terser).
+
+- **type**: `boolean`
+- **default**: `false`
+
+### terserOptions
+
+Options to pass to [terser](https://github.com/terser/terser). Only used if `optimizeJs` is `true`.
+
+- **type**: `OptimizeOptions`
+- **default**: `{}`
