@@ -4,8 +4,10 @@ import type { IndexHtmlTransformContext, Plugin } from "vite";
 import { optimize as optimizeSvg } from "svgo";
 import { minify as minifyCss } from "csso";
 import { minify as minifyJs } from "terser";
+import sass from "sass";
 import type { TransformPluginContext } from "rollup";
 import z from "zod";
+const { compileString: compileSass } = sass;
 
 const InlineSourceOptionsSchema = z
   .object({
@@ -19,6 +21,10 @@ const InlineSourceOptionsSchema = z
       .boolean()
       .default(true)
       .describe("Whether or not to optimize SVGs using svgo"),
+    compileSass: z
+      .boolean()
+      .default(false)
+      .describe("Whether or not to compile SASS using sass"),
     optimizeCss: z
       .boolean()
       .default(false)
@@ -28,6 +34,7 @@ const InlineSourceOptionsSchema = z
       .default(false)
       .describe("Whether or not to optimize JS using terser"),
     svgoOptions: z.object({}).passthrough().default({}),
+    sassOptions: z.object({}).passthrough().default({}),
     cssoOptions: z.object({}).passthrough().default({}),
     terserOptions: z.object({}).passthrough().default({}),
   })
@@ -60,6 +67,7 @@ export default function VitePluginInlineSource(
       const [matched, tagName, preAttributes, fileName, postAttributes] = token;
       const { index } = token;
       const isSvgFile = path.extname(fileName).toLowerCase() === ".svg";
+      const isScssFile = path.extname(fileName).toLowerCase() === ".scss";
       const isCssFile = path.extname(fileName).toLowerCase() === ".css";
       const isJsFile = path.extname(fileName).toLowerCase() === ".js";
       const isImg = tagName.toLowerCase() === "img";
@@ -81,11 +89,16 @@ export default function VitePluginInlineSource(
       if (isSvgFile && options.optimizeSvgs) {
         fileContent = optimizeSvg(fileContent, options.svgoOptions).data;
       } else if (isCssFile && options.optimizeCss) {
-        const minifiedCode = minifyCss(fileContent, options.cssoOptions).css
+        const minifiedCode = minifyCss(fileContent, options.cssoOptions).css;
         if (minifiedCode.length === 0 && fileContent.length !== 0) {
-          throw new Error('Failed to minify CSS')
+          throw new Error('Failed to minify CSS');
         }
         fileContent = minifiedCode
+      } else if (isScssFile && options.compileSass) {
+        const css = compileSass(fileContent, options.sassOptions).css;
+          fileContent = options.optimizeCss
+            ? minifyCss(css, options.cssoOptions).css
+            : css;
       } else if (isJsFile && options.optimizeJs) {
         const minifiedCode = (await minifyJs(fileContent, options.terserOptions)).code;
         if (minifiedCode) {

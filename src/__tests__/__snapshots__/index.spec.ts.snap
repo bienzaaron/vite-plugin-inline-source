@@ -291,3 +291,99 @@ exports[`js > it then minifies js with optimizeJs enabled, respecting terserOpti
   ],
 }
 `;
+
+exports[`scss > it NOT compile scss with default options 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.scss",
+      "name": "style.scss",
+      "needsCodeReference": false,
+      "source": "$color: #ff0000; /*! foo */ body { background-color: $color; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >$color: #ff0000; /*! foo */ body { background-color: $color; }</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`scss > it compile scss and minify it when compileScss and optimizeCss options enabled 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.scss",
+      "name": "style.scss",
+      "needsCodeReference": false,
+      "source": "$color: #ff0000; /*! foo */ body { background-color: $color; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >/*! foo */
+body{background-color:red}</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`scss > it compile scss and minify it when compileScss and optimizeCss options enabled; with empty content 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.scss",
+      "name": "style.scss",
+      "needsCodeReference": false,
+      "source": "$foo: 0;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          ></style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`scss > it compile scss when compileScss option enabled 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.scss",
+      "name": "style.scss",
+      "needsCodeReference": false,
+      "source": "$color: #ff0000; /*! foo */ body { background-color: $color; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >/*! foo */
+body {
+  background-color: #ff0000;
+}</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;

@@ -100,3 +100,17 @@ Options to pass to [terser](https://github.com/terser/terser). Only used if `opt
 
 - **type**: `OptimizeOptions`
 - **default**: `{}`
+
+### compileSass
+
+Whether or not to compile SASS using [sass](https://github.com/sass/dart-sass).
+
+- **type**: `boolean`
+- **default**: `false`
+
+### sassOptions
+
+Options to pass to [sass](https://github.com/sass/dart-sass). Only used if `compileSass` is `true`.
+
+- **type**: `OptimizeOptions`
+- **default**: `{}`
