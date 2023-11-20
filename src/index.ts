@@ -67,7 +67,7 @@ export default function VitePluginInlineSource(
       const [matched, tagName, preAttributes, fileName, postAttributes] = token;
       const { index } = token;
       const isSvgFile = path.extname(fileName).toLowerCase() === ".svg";
-      const isScssFile = path.extname(fileName).toLowerCase() === ".scss";
+      const isSassFile = path.extname(fileName).toLowerCase() === ".scss";
       const isCssFile = path.extname(fileName).toLowerCase() === ".css";
       const isJsFile = path.extname(fileName).toLowerCase() === ".js";
       const isImg = tagName.toLowerCase() === "img";
@@ -94,7 +94,7 @@ export default function VitePluginInlineSource(
           throw new Error('Failed to minify CSS');
         }
         fileContent = minifiedCode
-      } else if (isScssFile && options.compileSass) {
+      } else if (isSassFile && options.compileSass) {
         const css = compileSass(fileContent, options.sassOptions).css;
           fileContent = options.optimizeCss
             ? minifyCss(css, options.cssoOptions).css
