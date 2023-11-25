@@ -213,6 +213,23 @@ describe("css", () => {
     expect(buildOutput).toMatchSnapshot();
   });
 
+  test("fails gracefully with empty content", async () => {
+    expect(async () => {
+      await build({
+        root: __dirname,
+        plugins: [
+          emitTestAssetPlugin(cssFileName, " "),
+          replaceIndexHtmlPlugin(
+            `<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`
+          ),
+          inlineSource({
+            optimizeCss: true,
+          }),
+        ],
+      });
+    }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
+  });
+
   test("fails gracefully when css minification fails", () => {
     expect(async () => {
       await build({
@@ -230,6 +247,77 @@ describe("css", () => {
     }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
   });
 });
+
+describe('scss', () => {
+  const scssFileName = "style.scss";
+  const scssContent =
+    // language=scss
+    '$color: #ff0000; /*! foo */ body { background-color: $color; }';
+
+  test("it compile scss when compileScss option enabled", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(scssFileName, scssContent),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${scssFileName}" /></html>`
+        ),
+        inlineSource({
+          compileSass: true,
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it compile scss and minify it when compileScss and optimizeCss options enabled", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(scssFileName, scssContent),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${scssFileName}" /></html>`
+        ),
+        inlineSource({
+          compileSass: true,
+          optimizeCss: true,
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it compile scss and minify it when compileScss and optimizeCss options enabled; with empty content", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(scssFileName, '$foo: 0;'),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${scssFileName}" /></html>`
+        ),
+        inlineSource({
+          compileSass: true,
+          optimizeCss: true,
+        }),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+
+  test("it NOT compile scss with default options", async () => {
+    const buildOutput = await build({
+      root: __dirname,
+      plugins: [
+        emitTestAssetPlugin(scssFileName, scssContent),
+        replaceIndexHtmlPlugin(
+          `<html><style inline-source i-should-be-preserved src="${scssFileName}" /></html>`
+        ),
+        inlineSource(),
+      ],
+    });
+    expect(buildOutput).toMatchSnapshot();
+  });
+})
 
 describe("js", () => {
   const jsFileName = "script.js";
