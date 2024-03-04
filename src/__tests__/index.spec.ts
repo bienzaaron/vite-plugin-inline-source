@@ -388,12 +388,7 @@ describe("js", () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot(
-      `
-      "[31m[vite-plugin-inline-source] Unexpected token: name (a)[39m
-      file: [36m/Users/stryaponov/Documents/Projects/_3rd-party/vite-plugin-inline-source/src/__tests__/index.html[39m"
-    `
-    );
+    }).rejects.toThrowError('Unexpected token: name (a)');
   });
 });
 
