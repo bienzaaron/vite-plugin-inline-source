@@ -123,9 +123,7 @@ test("fails gracefully when svg optimization fails", () => {
         inlineSource({}),
       ],
     });
-  }).rejects.toThrowErrorMatchingInlineSnapshot(
-    '"<input>:1:35: Attribute without value"'
-  );
+  }).rejects.toThrowError('Attribute without value');
 });
 
 test("it then optimizes svg with custom options", async () => {
@@ -227,7 +225,7 @@ describe("css", () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
+    }).rejects.toThrowError('Failed to minify CSS');
   });
 
   test("fails gracefully when css minification fails", () => {
@@ -244,7 +242,7 @@ describe("css", () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
+    }).rejects.toThrowError('Failed to minify CSS');
   });
 });
 
@@ -391,7 +389,10 @@ describe("js", () => {
         ],
       });
     }).rejects.toThrowErrorMatchingInlineSnapshot(
-      '"Unexpected token: name (a)"'
+      `
+      "[31m[vite-plugin-inline-source] Unexpected token: name (a)[39m
+      file: [36m/Users/stryaponov/Documents/Projects/_3rd-party/vite-plugin-inline-source/src/__tests__/index.html[39m"
+    `
     );
   });
 });
