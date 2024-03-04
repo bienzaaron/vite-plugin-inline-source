@@ -54,12 +54,7 @@ export default function VitePluginInlineSource(
   async function transformHtml(
     source: string,
     ctx: TransformPluginContext | IndexHtmlTransformContext,
-    id?: string
   ) {
-    if (id && !id.endsWith(".html")) {
-      return source;
-    }
-
     const result = [];
     const tokens = source.matchAll(PATTERN);
     let prevPos = 0;
@@ -144,7 +139,11 @@ export default function VitePluginInlineSource(
       root = config.root ?? "";
     },
     transform(source, id) {
-      return transformHtml(source, this, id);
+      if (id && !id.endsWith(".html")) {
+        return null;
+      }
+
+      return transformHtml(source, this);
     },
     transformIndexHtml(source, ctx) {
       return transformHtml(source, ctx);
