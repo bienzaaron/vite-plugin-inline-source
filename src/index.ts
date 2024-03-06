@@ -4,7 +4,7 @@ import type { IndexHtmlTransformContext, Plugin } from "vite";
 import { optimize as optimizeSvg } from "svgo";
 import { minify as minifyCss } from "csso";
 import { minify as minifyJs } from "terser";
-import sass from "sass";
+import * as sass from "sass";
 import type { TransformPluginContext } from "rollup";
 import z from "zod";
 const { compileString: compileSass } = sass;

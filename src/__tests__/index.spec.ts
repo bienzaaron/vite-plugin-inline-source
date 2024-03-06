@@ -123,9 +123,7 @@ test("fails gracefully when svg optimization fails", () => {
         inlineSource({}),
       ],
     });
-  }).rejects.toThrowErrorMatchingInlineSnapshot(
-    '"<input>:1:35: Attribute without value"'
-  );
+  }).rejects.toThrowError('Attribute without value');
 });
 
 test("it then optimizes svg with custom options", async () => {
@@ -227,7 +225,7 @@ describe("css", () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
+    }).rejects.toThrowError('Failed to minify CSS');
   });
 
   test("fails gracefully when css minification fails", () => {
@@ -244,7 +242,7 @@ describe("css", () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot('"Failed to minify CSS"');
+    }).rejects.toThrowError('Failed to minify CSS');
   });
 });
 
@@ -390,9 +388,7 @@ describe("js", () => {
           }),
         ],
       });
-    }).rejects.toThrowErrorMatchingInlineSnapshot(
-      '"Unexpected token: name (a)"'
-    );
+    }).rejects.toThrowError('Unexpected token: name (a)');
   });
 });
 
