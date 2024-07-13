@@ -8,6 +8,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
+  "packageManager": "yarn@4.3.1",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
@@ -34,7 +35,7 @@
   "author": "Aaron Bienz <bienzaaronj@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "ci": "npm run lint && npm run test && npm run typecheck && npm run build",
+    "ci": "yarn lint && yarn test && yarn typecheck && yarn build",
     "typecheck": "tsc -p tsconfig.json",
     "build": "unbuild",
     "lint": "eslint .",
