@@ -20,6 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - run: corepack install
+      - run: corepack install && corepack prepare --activate
       - run: yarn
       - run: yarn ci
