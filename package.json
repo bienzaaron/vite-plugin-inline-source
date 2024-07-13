@@ -1,73 +1,61 @@
 {
-  "name": "vite-plugin-inline-source",
-  "version": "2.5.2",
-  "description": "A vite plugin for inlining files into HTML",
-  "files": [
-    "dist"
-  ],
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "packageManager": "yarn@4.3.1",
-  "exports": {
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "type": "module",
-  "keywords": [
-    "vite",
-    "plugin",
-    "markup",
-    "inline",
-    "css",
-    "svg"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bienzaaron/vite-plugin-inline-source.git"
-  },
-  "bugs": {
-    "url": "https://github.com/bienzaaron/vite-plugin-inline-source/issues"
-  },
-  "homepage": "https://github.com/bienzaaron/vite-plugin-inline-source#readme",
-  "author": "Aaron Bienz <bienzaaronj@gmail.com>",
-  "license": "MIT",
-  "scripts": {
-    "ci": "yarn lint && yarn test && yarn typecheck && yarn build",
-    "typecheck": "tsc -p tsconfig.json",
-    "build": "unbuild",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "test": "vitest run --coverage",
-    "test:watch": "vitest"
-  },
-  "dependencies": {
-    "csso": "^5.0.5",
-    "sass": "^1.69.5",
-    "svgo": "^3.0.4",
-    "terser": "^5.24.0",
-    "tslib": "^2.6.2",
-    "zod": "^3.22.4"
-  },
-  "devDependencies": {
-    "@tsconfig/node18": "^18.2.2",
-    "@types/csso": "^5.0.3",
-    "@types/terser": "^3.12.0",
-    "@typescript-eslint/eslint-plugin": "^6.12.0",
-    "@typescript-eslint/parser": "^6.12.0",
-    "@vitest/coverage-v8": "^0.34.6",
-    "eslint": "^8.54.0",
-    "eslint-config-prettier": "^9.0.0",
-    "prettier": "^3.1.0",
-    "rollup": "^4.5.2",
-    "typescript": "^5.3.2",
-    "unbuild": "^2.0.0",
-    "vite": "^5.0.2",
-    "vitest": "^0.34.6"
-  },
-  "peerDependencies": {
-    "vite": "2.x || 3.x || 4.x || 5.x"
-  }
+	"name": "vite-plugin-inline-source",
+	"version": "2.5.2",
+	"description": "A vite plugin for inlining files into HTML",
+	"files": ["dist"],
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"packageManager": "yarn@4.3.1",
+	"exports": {
+		".": {
+			"import": "./dist/index.mjs",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"type": "module",
+	"keywords": ["vite", "plugin", "markup", "inline", "css", "svg"],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bienzaaron/vite-plugin-inline-source.git"
+	},
+	"bugs": {
+		"url": "https://github.com/bienzaaron/vite-plugin-inline-source/issues"
+	},
+	"homepage": "https://github.com/bienzaaron/vite-plugin-inline-source#readme",
+	"author": "Aaron Bienz <bienzaaronj@gmail.com>",
+	"license": "MIT",
+	"scripts": {
+		"ci": "yarn lint && yarn test && yarn typecheck && yarn build",
+		"typecheck": "tsc -p tsconfig.json",
+		"build": "unbuild",
+		"lint": "biome check",
+		"lint:fix": "biome check --write",
+		"test": "vitest run --coverage",
+		"test:watch": "vitest"
+	},
+	"dependencies": {
+		"csso": "^5.0.5",
+		"sass": "^1.69.5",
+		"svgo": "^3.0.4",
+		"terser": "^5.24.0",
+		"tslib": "^2.6.2",
+		"zod": "^3.22.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"@tsconfig/node18": "^18.2.2",
+		"@types/csso": "^5.0.3",
+		"@types/terser": "^3.12.0",
+		"@vitest/coverage-v8": "^0.34.6",
+		"prettier": "^3.1.0",
+		"rollup": "^4.5.2",
+		"typescript": "^5.3.2",
+		"unbuild": "^2.0.0",
+		"vite": "^5.0.2",
+		"vitest": "^0.34.6"
+	},
+	"peerDependencies": {
+		"vite": "2.x || 3.x || 4.x || 5.x"
+	}
 }

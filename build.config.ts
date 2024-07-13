@@ -1,12 +1,12 @@
-import { defineBuildConfig } from 'unbuild';
+import { defineBuildConfig } from "unbuild";
 
 export default defineBuildConfig({
-  entries: ['src/index'],
-  externals: ['svgo', 'tslib', 'vite'],
-  clean: true,
-  declaration: true,
-  rollup: {
-    emitCJS: true,
-    inlineDependencies: true,
-  },
-})
+	entries: ["src/index"],
+	externals: ["svgo", "tslib", "vite"],
+	clean: true,
+	declaration: true,
+	rollup: {
+		emitCJS: true,
+		inlineDependencies: true,
+	},
+});
