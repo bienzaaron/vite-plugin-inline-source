@@ -1,6 +1,6 @@
 {
-	"extends": "@tsconfig/node18",
-	"include": ["src", "vite.config.ts", "build.config.ts"],
+	"extends": "@tsconfig/node18/tsconfig.json",
+	"include": ["src", "vite.config.ts", "tsup.config.ts"],
 	"compilerOptions": {
 		"outDir": "dist",
 		"noEmit": true
