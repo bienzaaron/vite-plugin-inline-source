@@ -77,7 +77,7 @@
 				"useValidTypeof": "error"
 			}
 		},
-		"ignore": ["dist", ".yarn", "node_modules", "coverage"]
+		"ignore": ["dist", ".yarn", "node_modules", "coverage", "package.json"]
 	},
 	"overrides": [
 		{
