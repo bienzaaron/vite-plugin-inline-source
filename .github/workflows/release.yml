@@ -16,7 +16,7 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
       - run: corepack enable && corepack install && corepack prepare --activate
-      - run: yarn
+      - run: yarn install --immutable
       - run: yarn ci
       - run: yarn npm publish
         env:

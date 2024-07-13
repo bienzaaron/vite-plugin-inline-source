@@ -2,7 +2,9 @@
 	"name": "vite-plugin-inline-source",
 	"version": "2.5.2",
 	"description": "A vite plugin for inlining files into HTML",
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.js",
 	"types": "./dist/index.d.ts",
@@ -14,7 +16,14 @@
 		}
 	},
 	"type": "module",
-	"keywords": ["vite", "plugin", "markup", "inline", "css", "svg"],
+	"keywords": [
+		"vite",
+		"plugin",
+		"markup",
+		"inline",
+		"css",
+		"svg"
+	],
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bienzaaron/vite-plugin-inline-source.git"
