@@ -26,6 +26,22 @@ const replaceIndexHtmlPlugin = (source: string): Plugin => ({
   transform: (_, id) => (id.endsWith("index.html") ? source : null),
 });
 
+test("handles custom attribute and defaults to 'inline-source'", async () => {
+  const buildOutput = await build({
+    root: __dirname,
+    plugins: [
+      emitTestAssetPlugin("style.css", "body { background-color: red; }"),
+      replaceIndexHtmlPlugin(
+          '<html><style custom-inline-attribute i-should-be-preserved src="style.css" ></ style ></html>'
+      ),
+      inlineSource({
+        customAttribute: "custom-inline-attribute",
+      }),
+    ],
+  });
+  expect(buildOutput).toMatchSnapshot();
+});
+
 test("it then inlines css and preserves style tags", async () => {
   const buildOutput = await build({
     root: __dirname,
