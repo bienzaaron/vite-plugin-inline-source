@@ -18,6 +18,10 @@ import { z } from "zod";
 const { compileString: compileSass } = sass;
 
 const InlineSourceOptionsSchema = z.object({
+	customAttribute: z
+		.string()
+		.default("inline-source")
+		.describe("Custom attribute to trigger inlining"),
 	replaceTags: z
 		.array(z.string())
 		.optional()
@@ -88,7 +92,7 @@ export default function VitePluginInlineSource(
 			const isJsFile = path.extname(fileName).toLowerCase() === ".js";
 			const isTsFile = path.extname(fileName).toLowerCase() === ".ts";
 			const isImg = tagName.toLowerCase() === "img";
-			const shouldInline = /\binline-source\b/.test(
+			const shouldInline = new RegExp(`\\b${options.customAttribute}\\b`).test(
 				preAttributes + " " + postAttributes,
 			);
 
@@ -177,9 +181,9 @@ export default function VitePluginInlineSource(
 					fileContent.replace(
 						new RegExp(`^<\\s*${tagName}`),
 						`<${tagName} ${preAttributes.replace(
-							/inline-source/g,
+							new RegExp(options.customAttribute, "g"),
 							"",
-						)} ${postAttributes.replace(/inline-source/g, "")}`,
+						)} ${postAttributes.replace(new RegExp(options.customAttribute, "g"), "")}`,
 					),
 				);
 			} else {

@@ -1,30 +1,55 @@
-import type { Plugin } from "vite";
-import { build as viteBuild } from "vite";
-import { describe, expect, test } from "vitest";
+import type { BinaryLike, BinaryToTextEncoding } from "node:crypto";
+import { unlink, writeFile } from "node:fs/promises";
+import { createRequire } from "node:module";
+import path from "node:path";
+import type { PluginContext } from "rollup";
+import type {
+	ConfigEnv,
+	IndexHtmlTransformContext,
+	Plugin,
+	ResolvedConfig,
+	UserConfig,
+} from "vite";
+import * as vite from "vite";
+import { describe, expect, test, vi } from "vitest";
 import inlineSource from "../index.js";
 
-const build: typeof viteBuild = async (...args) => {
-	const out = await viteBuild(...args);
+const require = createRequire(import.meta.url);
+type CryptoModuleWithHash = typeof import("node:crypto") & {
+	hash?: (
+		algorithm: string,
+		data: BinaryLike,
+		encoding: BinaryToTextEncoding,
+	) => string;
+};
+const cryptoPolyfill = require("crypto") as CryptoModuleWithHash;
+if (typeof cryptoPolyfill.hash !== "function") {
+	const hashPolyfill = (
+		algorithm: string,
+		data: BinaryLike,
+		encoding: BinaryToTextEncoding,
+	): string => {
+		const hash = cryptoPolyfill.createHash(algorithm);
+		hash.update(data);
+		return hash.digest(encoding);
+	};
+	cryptoPolyfill.hash = hashPolyfill;
+}
+
+const build: typeof vite.build = async (...args) => {
+	const out = await vite.build(...args);
 	if (Array.isArray(out)) {
 		for (const o of out.flatMap((o) => o.output)) {
-			if ("originalFileName" in o) {
-				// @ts-expect-error
-				delete o.originalFileName;
-				// @ts-expect-error
-				delete o.originalFileNames;
-				// @ts-expect-error
-				delete o.names;
-			}
+			delete (o as { originalFileName?: string }).originalFileName;
+			delete (o as { originalFileNames?: string[] }).originalFileNames;
+			delete (o as { names?: string[] }).names;
 		}
 	} else if ("output" in out) {
 		for (const o of out.output) {
 			if ("originalFileName" in o) {
-				// @ts-expect-error
-				delete o.originalFileName;
-				// @ts-expect-error
-				delete o.originalFileNames;
-				// @ts-expect-error
-				delete o.names;
+				delete (o as { originalFileName?: string }).originalFileName;
+				delete (o as { originalFileNames?: string[] }).originalFileNames;
+				delete (o as { names?: string[] }).names;
 			}
 		}
 	}
@@ -52,6 +77,22 @@ const emitTestAssetPlugin = (fileName: string, source: string): Plugin => ({
 const replaceIndexHtmlPlugin = (source: string): Plugin => ({
 	name: "replace-index-html-plugin",
 	transform: (_, id) => (id.endsWith("index.html") ? source : null),
+});
+
+test("handles custom attribute and defaults to 'inline-source'", async () => {
+	const buildOutput = await build({
+		root: __dirname,
+		plugins: [
+			emitTestAssetPlugin("style.css", "body { background-color: red; }"),
+			replaceIndexHtmlPlugin(
+				'<html><style custom-inline-attribute i-should-be-preserved src="style.css" ></ style ></html>',
+			),
+			inlineSource({
+				customAttribute: "custom-inline-attribute",
+			}),
+		],
+	});
+	expect(buildOutput).toMatchSnapshot();
 });
 
 test("it then inlines css and preserves style tags", async () => {
@@ -511,6 +552,135 @@ describe("ts", () => {
 			],
 		});
 		expect(buildOutput).toMatchSnapshot();
+	});
+});
+
+describe("direct transform usage", () => {
+	const baseEnv: ConfigEnv = {
+		command: "build",
+		mode: "test-mode",
+		isSsrBuild: false,
+	};
+
+	const runTransform = async (
+		html: string,
+		options?: Parameters<typeof inlineSource>[0],
+	) => {
+		const plugin = inlineSource(options);
+		const pluginContext = {} as PluginContext;
+		const userConfig = {} as UserConfig;
+		if (typeof plugin.config === "function") {
+			plugin.config.call(pluginContext, userConfig, baseEnv);
+		} else if (plugin.config?.handler) {
+			plugin.config.handler.call(pluginContext, userConfig, baseEnv);
+		}
+
+		const resolvedConfig = {
+			root: __dirname,
+			base: "/",
+		} as ResolvedConfig;
+		if (typeof plugin.configResolved === "function") {
+			plugin.configResolved.call(pluginContext, resolvedConfig);
+		} else if (plugin.configResolved?.handler) {
+			plugin.configResolved.handler.call(pluginContext, resolvedConfig);
+		}
+
+		const transformContext = {
+			server: {} as Record<string, unknown>,
+		} as IndexHtmlTransformContext;
+		const result =
+			typeof plugin.transformIndexHtml === "function"
+				? await plugin.transformIndexHtml.call(
+						pluginContext,
+						html,
+						transformContext,
+					)
+				: plugin.transformIndexHtml?.handler?.call(
+						pluginContext,
+						html,
+						transformContext,
+					);
+		if (typeof result !== "string") {
+			throw new Error("Expected HTML string from transform");
+		}
+		return result;
+	};
+
+	test("reads assets from disk when dev server context is provided", async () => {
+		const result = await runTransform(
+			'<html><style inline-source src="fixtures/style-dev.css"></style></html>',
+		);
+		expect(result).toContain("background-color: teal;");
+	});
+
+	test("injects VITE env variables during TypeScript compilation", async () => {
+		const result = await runTransform(
+			'<html><script inline-source src="fixtures/env-script.ts"></script></html>',
+			{
+				compileTs: true,
+			},
+		);
+		expect(result).toContain('const envVar = "from-env";');
+	});
+
+	test("warns but keeps code when terser fails to minify compiled TypeScript", async () => {
+		const consoleSpy = vi
+			.spyOn(console, "warn")
+			.mockImplementation(() => undefined);
+		try {
+			const result = await runTransform(
+				'<html><script inline-source src="fixtures/env-script.ts"></script></html>',
+				{
+					compileTs: true,
+					optimizeJs: true,
+					terserOptions: {
+						compress: "invalid" as never,
+					},
+				},
+			);
+			expect(consoleSpy).toHaveBeenCalledWith(
+				"Failed to minify compiled TypeScript:",
+				expect.objectContaining({
+					message: expect.stringContaining("not a supported option"),
+				}),
+			);
+			expect(result).toContain('const envVar = "from-env";');
+		} finally {
+			consoleSpy.mockRestore();
+		}
+	});
+
+	test("rethrows errors when TypeScript compilation fails", async () => {
+		const consoleSpy = vi
+			.spyOn(console, "error")
+			.mockImplementation(() => undefined);
+		const badScriptPath = path.join(
+			__dirname,
+			"fixtures",
+			"temp-bad-script.ts",
+		);
+		const badScriptSrc = `fixtures/${path.basename(badScriptPath)}`;
+		await writeFile(
+			badScriptPath,
+			"// invalid on purpose for error handling test\nexport const broken = <missing>;",
+		);
+		try {
+			await expect(
+				runTransform(
+					`<html><script inline-source src="${badScriptSrc}"></script></html>`,
+					{
+						compileTs: true,
+					},
+				),
+			).rejects.toThrowError();
+			expect(consoleSpy).toHaveBeenCalledWith(
+				"Failed to compile TypeScript:",
+				expect.any(Error),
+			);
+		} finally {
+			await unlink(badScriptPath).catch(() => undefined);
+			consoleSpy.mockRestore();
+		}
 	});
 });
 
