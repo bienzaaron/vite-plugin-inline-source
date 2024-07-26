@@ -49,7 +49,7 @@
 		"csso": "^5.0.5",
 		"sass": "^1.77.8",
 		"svgo": "^3.3.2",
-		"terser": "^5.31.2",
+		"terser": "^5.31.3",
 		"tslib": "^2.6.3",
 		"zod": "^3.23.8"
 	},
@@ -58,21 +58,21 @@
 		"@tsconfig/node18": "^18.2.4",
 		"@types/csso": "^5.0.4",
 		"@types/terser": "^3.12.0",
-		"@vitest/coverage-v8": "^0.34.6",
+		"@vitest/coverage-v8": "^2.0.4",
 		"husky": "^9.1.2",
 		"lint-staged": "^15.2.7",
 		"prettier": "^3.3.3",
-		"publint": "^0.2.8",
-		"rollup": "^4.18.1",
-		"tsup": "^8.1.0",
-		"typescript": "^5.5.3",
-		"vite": "^5.3.3",
-		"vitest": "^0.34.6"
+		"publint": "^0.2.9",
+		"rollup": "^4.19.0",
+		"tsup": "^8.2.3",
+		"typescript": "^5.5.4",
+		"vite": "^5.3.5",
+		"vitest": "^2.0.4"
 	},
 	"peerDependencies": {
 		"vite": "2.x || 3.x || 4.x || 5.x"
 	},
-  "lint-staged": {
-    "*.{js,ts,jsx,tsx,json,html}": "yarn lint:fix"
-  }
+	"lint-staged": {
+		"*.{js,ts,jsx,tsx,json,html}": "yarn lint:fix"
+	}
 }
