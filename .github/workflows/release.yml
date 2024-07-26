@@ -16,9 +16,9 @@ jobs:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
       - run: corepack enable && corepack install && corepack prepare --activate
-      - run: yarn install --immutable
-      - run: yarn ci
-      - run: yarn npm publish
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm pipeline
+      - run: pnpm npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Release

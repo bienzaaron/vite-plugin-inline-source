@@ -4,12 +4,15 @@
 	"files": {
 		"ignore": [
 			"dist",
-			".yarn",
 			"node_modules",
 			"coverage",
 			"package.json",
 			"test-report.json"
 		]
+	},
+	"vcs": {
+		"defaultBranch": "main",
+		"useIgnoreFile": true
 	},
 	"linter": {
 		"enabled": true,
