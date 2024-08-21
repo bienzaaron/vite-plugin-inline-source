@@ -47,7 +47,7 @@ importers:
         version: 2.0.4(vitest@2.0.4(@types/node@18.19.42)(sass@1.77.8)(terser@5.31.3))
       husky:
         specifier: ^9.1.2
-        version: 9.1.2
+        version: 9.1.5
       lint-staged:
         specifier: ^15.2.7
         version: 15.2.7
@@ -927,8 +927,8 @@ packages:
     resolution: {integrity: sha512-AXcZb6vzzrFAUE61HnN4mpLqd/cSIwNQjtNWR0euPm6y0iqx3G4gOXaIDdtdDwZmhwe82LA6+zinmW4UBWVePQ==}
     engines: {node: '>=16.17.0'}
 
-  husky@9.1.2:
-    resolution: {integrity: sha512-1/aDMXZdhr1VdJJTLt6e7BipM0Jd9qkpubPiIplon1WmCeOy3nnzsCMeBqS9AsL5ioonl8F8y/F2CLOmk19/Pw==}
+  husky@9.1.5:
+    resolution: {integrity: sha512-rowAVRUBfI0b4+niA4SJMhfQwc107VLkBUgEYYAOQAbqDCnra1nYh83hF/MDmhYs9t9n1E3DuKOrs2LYNC+0Ag==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -2304,7 +2304,7 @@ snapshots:
 
   human-signals@5.0.0: {}
 
-  husky@9.1.2: {}
+  husky@9.1.5: {}
 
   ignore-walk@5.0.1:
     dependencies:
