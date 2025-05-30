@@ -1,7 +1,35 @@
 import type { Plugin } from "vite";
-import { build } from "vite";
+import { build as viteBuild } from "vite";
 import { describe, expect, test } from "vitest";
 import inlineSource from "../index.js";
+
+const build: typeof viteBuild = async (...args) => {
+	const out = await viteBuild(...args);
+	if (Array.isArray(out)) {
+		for (const o of out.flatMap((o) => o.output)) {
+			if ("originalFileName" in o) {
+				// @ts-expect-error
+				delete o.originalFileName;
+				// @ts-expect-error
+				delete o.originalFileNames;
+				// @ts-expect-error
+				delete o.names;
+			}
+		}
+	} else if ("output" in out) {
+		for (const o of out.output) {
+			if ("originalFileName" in o) {
+				// @ts-expect-error
+				delete o.originalFileName;
+				// @ts-expect-error
+				delete o.originalFileNames;
+				// @ts-expect-error
+				delete o.names;
+			}
+		}
+	}
+	return out;
+};
 
 const emitTestAssetPlugin = (fileName: string, source: string): Plugin => ({
 	name: "test-asset-plugin",
@@ -212,20 +240,22 @@ describe("css", () => {
 	});
 
 	test("fails gracefully with empty content", async () => {
-		expect(async () => {
-			await build({
-				root: __dirname,
-				plugins: [
-					emitTestAssetPlugin(cssFileName, " "),
-					replaceIndexHtmlPlugin(
-						`<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`,
-					),
-					inlineSource({
-						optimizeCss: true,
-					}),
-				],
-			});
-		}).rejects.toThrowError("Failed to minify CSS");
+		(
+			await expect(async () => {
+				await build({
+					root: __dirname,
+					plugins: [
+						emitTestAssetPlugin(cssFileName, " "),
+						replaceIndexHtmlPlugin(
+							`<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`,
+						),
+						inlineSource({
+							optimizeCss: true,
+						}),
+					],
+				});
+			})
+		).rejects.toThrowError("Failed to minify CSS");
 	});
 
 	test("fails gracefully when css minification fails", () => {
