@@ -40,6 +40,7 @@ var esbuild = __toESM(require("esbuild"), 1);
 var sass = __toESM(require("sass"), 1);
 var import_svgo = require("svgo");
 var import_terser = require("terser");
+var import_vite = require("vite");
 var import_zod = __toESM(require("zod"), 1);
 var { compileString: compileSass } = sass;
 var InlineSourceOptionsSchema = import_zod.default.object({
@@ -104,6 +105,11 @@ function VitePluginInlineSource(opts) {
         }
       } else if (isTsFile && options.compileTs) {
         console.log(filePath, process.env);
+        const envVars = (0, import_vite.loadEnv)(env.mode, process.cwd());
+        const envVarDefines = Object.entries(envVars).reduce((prev, [key, value]) => {
+          if (key.startsWith("VITE")) prev[`import.meta.env.${key}`] = value;
+          return prev;
+        }, {});
         const transformResult = await esbuild.build({
           entryPoints: [filePath],
           write: false,
@@ -112,7 +118,8 @@ function VitePluginInlineSource(opts) {
             "import.meta.env.BASE_URL": `"${config.base ?? "/"}"`,
             "import.meta.env.PROD": `${process.env.NODE_ENV == "production"}`,
             "import.meta.env.DEV": `${process.env.NODE_ENV != "production"}`,
-            "import.meta.env.SSR": `${env.isSsrBuild}`
+            "import.meta.env.SSR": `${env.isSsrBuild}`,
+            ...envVarDefines
           }
         });
         if (transformResult.errors.length != 0) {
