@@ -69,11 +69,24 @@ function VitePluginInlineSource(opts) {
           fileContent = minifiedCode;
         }
       } else if (isTsFile && options.compileTs) {
-        const transformResult = await esbuild.transform(fileContent);
-        if (transformResult.code) {
-          fileContent = transformResult.code;
-        } else {
+        console.log(filePath, process.env);
+        const transformResult = await esbuild.build({
+          entryPoints: [filePath],
+          write: false,
+          define: {
+            "import.meta.env.MODE": `"${env.mode}"`,
+            "import.meta.env.BASE_URL": `"${config.base ?? "/"}"`,
+            "import.meta.env.PROD": `${process.env.NODE_ENV == "production"}`,
+            "import.meta.env.DEV": `${process.env.NODE_ENV != "production"}`,
+            "import.meta.env.SSR": `${env.isSsrBuild}`
+          }
+        });
+        if (transformResult.errors.length != 0) {
           console.error(transformResult);
+          throw new Error(transformResult.errors.join("\n"));
+        } else {
+          console.log(transformResult.outputFiles[0].text);
+          fileContent = transformResult.outputFiles[0].text;
         }
       }
       fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");
@@ -105,10 +118,16 @@ function VitePluginInlineSource(opts) {
     result.push(source.slice(prevPos));
     return result.join("");
   }
+  let env;
+  let config;
   return {
     name: "vite-plugin-inline-source",
-    configResolved(config) {
-      root = config.root ?? "";
+    configResolved(config2) {
+      root = config2.root ?? "";
+    },
+    config(c, e) {
+      config = c;
+      env = e;
     },
     transform(source, id) {
       if (id && !id.endsWith(".html")) {

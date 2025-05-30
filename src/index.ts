@@ -6,7 +6,13 @@ import type { TransformPluginContext } from "rollup";
 import * as sass from "sass";
 import { optimize as optimizeSvg } from "svgo";
 import { minify as minifyJs } from "terser";
-import type { IndexHtmlTransformContext, Plugin } from "vite";
+import {
+	type ConfigEnv,
+	type IndexHtmlTransformContext,
+	type Plugin,
+	type UserConfig,
+	loadEnv,
+} from "vite";
 import z from "zod";
 const { compileString: compileSass } = sass;
 
@@ -110,11 +116,34 @@ export default function VitePluginInlineSource(
 					fileContent = minifiedCode;
 				}
 			} else if (isTsFile && options.compileTs) {
-				const transformResult = await esbuild.transform(fileContent);
-				if (transformResult.code) {
-					fileContent = transformResult.code;
-				} else {
+				console.log(filePath, process.env);
+				const envVars = loadEnv(env.mode, process.cwd());
+				const envVarDefines = Object.entries(envVars).reduce<
+					Record<string, string>
+				>((prev, [key, value]) => {
+					if (!key.startsWith("VITE")) return prev;
+					prev[`import.meta.env.${key}`] = value;
+					return prev;
+				}, {});
+				const transformResult = await esbuild.build({
+					entryPoints: [filePath],
+					write: false,
+					define: {
+						"import.meta.env.MODE": `"${env.mode}"`,
+						"import.meta.env.BASE_URL": `"${config.base ?? "/"}"`,
+						"import.meta.env.PROD": `${process.env.NODE_ENV == "production"}`,
+						"import.meta.env.DEV": `${process.env.NODE_ENV != "production"}`,
+						"import.meta.env.SSR": `${env.isSsrBuild}`,
+						...envVarDefines,
+					},
+				});
+
+				if (transformResult.errors.length != 0) {
 					console.error(transformResult);
+					throw new Error(transformResult.errors.join("\n"));
+				} else {
+					console.log(transformResult.outputFiles[0].text);
+					fileContent = transformResult.outputFiles[0].text;
 				}
 			}
 			fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");
@@ -149,10 +178,17 @@ export default function VitePluginInlineSource(
 		return result.join("");
 	}
 
+	let env: ConfigEnv;
+	let config: UserConfig;
+
 	return {
 		name: "vite-plugin-inline-source",
 		configResolved(config) {
 			root = config.root ?? "";
+		},
+		config(c, e) {
+			config = c;
+			env = e;
 		},
 		transform(source, id) {
 			if (id && !id.endsWith(".html")) {
