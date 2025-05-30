@@ -6,6 +6,7 @@ declare const InlineSourceOptionsSchema: z.ZodDefault<z.ZodObject<{
     optimizeSvgs: z.ZodDefault<z.ZodBoolean>;
     compileSass: z.ZodDefault<z.ZodBoolean>;
     optimizeCss: z.ZodDefault<z.ZodBoolean>;
+    compileTs: z.ZodDefault<z.ZodBoolean>;
     optimizeJs: z.ZodDefault<z.ZodBoolean>;
     svgoOptions: z.ZodDefault<z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>>;
     sassOptions: z.ZodDefault<z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>>;
@@ -16,6 +17,7 @@ declare const InlineSourceOptionsSchema: z.ZodDefault<z.ZodObject<{
     optimizeSvgs: boolean;
     compileSass: boolean;
     optimizeCss: boolean;
+    compileTs: boolean;
     optimizeJs: boolean;
     svgoOptions: {} & {
         [k: string]: unknown;
@@ -34,6 +36,7 @@ declare const InlineSourceOptionsSchema: z.ZodDefault<z.ZodObject<{
     optimizeSvgs?: boolean | undefined;
     compileSass?: boolean | undefined;
     optimizeCss?: boolean | undefined;
+    compileTs?: boolean | undefined;
     optimizeJs?: boolean | undefined;
     svgoOptions?: z.objectInputType<{}, z.ZodTypeAny, "passthrough"> | undefined;
     sassOptions?: z.objectInputType<{}, z.ZodTypeAny, "passthrough"> | undefined;

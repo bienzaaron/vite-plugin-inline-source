@@ -1,6 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { minify as minifyCss } from "csso";
+import * as esbuild from "esbuild";
 import type { TransformPluginContext } from "rollup";
 import * as sass from "sass";
 import { optimize as optimizeSvg } from "svgo";
@@ -29,6 +30,12 @@ const InlineSourceOptionsSchema = z
 			.boolean()
 			.default(false)
 			.describe("Whether or not to optimize CSS using csso"),
+		compileTs: z
+			.boolean()
+			.default(true)
+			.describe(
+				"Whether or not to transform TypeScript to JavaScript using esbuild",
+			),
 		optimizeJs: z
 			.boolean()
 			.default(false)
@@ -65,6 +72,7 @@ export default function VitePluginInlineSource(
 			const isSassFile = path.extname(fileName).toLowerCase() === ".scss";
 			const isCssFile = path.extname(fileName).toLowerCase() === ".css";
 			const isJsFile = path.extname(fileName).toLowerCase() === ".js";
+			const isTsFile = path.extname(fileName).toLowerCase() === ".ts";
 			const isImg = tagName.toLowerCase() === "img";
 			const shouldInline = /\binline-source\b/.test(
 				preAttributes + " " + postAttributes,
@@ -101,8 +109,14 @@ export default function VitePluginInlineSource(
 				if (minifiedCode) {
 					fileContent = minifiedCode;
 				}
+			} else if (isTsFile && options.compileTs) {
+				const transformResult = await esbuild.transform(fileContent);
+				if (transformResult.code) {
+					fileContent = transformResult.code;
+				} else {
+					console.error(transformResult);
+				}
 			}
-
 			fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");
 
 			if (index !== prevPos) {

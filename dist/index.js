@@ -2,6 +2,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import { minify as minifyCss } from "csso";
+import * as esbuild from "esbuild";
 import * as sass from "sass";
 import { optimize as optimizeSvg } from "svgo";
 import { minify as minifyJs } from "terser";
@@ -14,6 +15,9 @@ var InlineSourceOptionsSchema = z.object({
   optimizeSvgs: z.boolean().default(true).describe("Whether or not to optimize SVGs using svgo"),
   compileSass: z.boolean().default(false).describe("Whether or not to compile SASS using sass"),
   optimizeCss: z.boolean().default(false).describe("Whether or not to optimize CSS using csso"),
+  compileTs: z.boolean().default(true).describe(
+    "Whether or not to transform TypeScript to JavaScript using esbuild"
+  ),
   optimizeJs: z.boolean().default(false).describe("Whether or not to optimize JS using terser"),
   svgoOptions: z.object({}).passthrough().default({}),
   sassOptions: z.object({}).passthrough().default({}),
@@ -35,6 +39,7 @@ function VitePluginInlineSource(opts) {
       const isSassFile = path.extname(fileName).toLowerCase() === ".scss";
       const isCssFile = path.extname(fileName).toLowerCase() === ".css";
       const isJsFile = path.extname(fileName).toLowerCase() === ".js";
+      const isTsFile = path.extname(fileName).toLowerCase() === ".ts";
       const isImg = tagName.toLowerCase() === "img";
       const shouldInline = /\binline-source\b/.test(
         preAttributes + " " + postAttributes
@@ -62,6 +67,13 @@ function VitePluginInlineSource(opts) {
         const minifiedCode = (await minifyJs(fileContent, options.terserOptions)).code;
         if (minifiedCode) {
           fileContent = minifiedCode;
+        }
+      } else if (isTsFile && options.compileTs) {
+        const transformResult = await esbuild.transform(fileContent);
+        if (transformResult.code) {
+          fileContent = transformResult.code;
+        } else {
+          console.error(transformResult);
         }
       }
       fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");

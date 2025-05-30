@@ -36,6 +36,7 @@ module.exports = __toCommonJS(index_exports);
 var import_promises = require("fs/promises");
 var import_node_path = __toESM(require("path"), 1);
 var import_csso = require("csso");
+var esbuild = __toESM(require("esbuild"), 1);
 var sass = __toESM(require("sass"), 1);
 var import_svgo = require("svgo");
 var import_terser = require("terser");
@@ -48,6 +49,9 @@ var InlineSourceOptionsSchema = import_zod.default.object({
   optimizeSvgs: import_zod.default.boolean().default(true).describe("Whether or not to optimize SVGs using svgo"),
   compileSass: import_zod.default.boolean().default(false).describe("Whether or not to compile SASS using sass"),
   optimizeCss: import_zod.default.boolean().default(false).describe("Whether or not to optimize CSS using csso"),
+  compileTs: import_zod.default.boolean().default(true).describe(
+    "Whether or not to transform TypeScript to JavaScript using esbuild"
+  ),
   optimizeJs: import_zod.default.boolean().default(false).describe("Whether or not to optimize JS using terser"),
   svgoOptions: import_zod.default.object({}).passthrough().default({}),
   sassOptions: import_zod.default.object({}).passthrough().default({}),
@@ -69,6 +73,7 @@ function VitePluginInlineSource(opts) {
       const isSassFile = import_node_path.default.extname(fileName).toLowerCase() === ".scss";
       const isCssFile = import_node_path.default.extname(fileName).toLowerCase() === ".css";
       const isJsFile = import_node_path.default.extname(fileName).toLowerCase() === ".js";
+      const isTsFile = import_node_path.default.extname(fileName).toLowerCase() === ".ts";
       const isImg = tagName.toLowerCase() === "img";
       const shouldInline = /\binline-source\b/.test(
         preAttributes + " " + postAttributes
@@ -96,6 +101,13 @@ function VitePluginInlineSource(opts) {
         const minifiedCode = (await (0, import_terser.minify)(fileContent, options.terserOptions)).code;
         if (minifiedCode) {
           fileContent = minifiedCode;
+        }
+      } else if (isTsFile && options.compileTs) {
+        const transformResult = await esbuild.transform(fileContent);
+        if (transformResult.code) {
+          fileContent = transformResult.code;
+        } else {
+          console.error(transformResult);
         }
       }
       fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");

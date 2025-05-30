@@ -11,6 +11,9 @@ importers:
       csso:
         specifier: ^5.0.5
         version: 5.0.5
+      esbuild:
+        specifier: ^0.25.5
+        version: 0.25.5
       sass:
         specifier: ^1.89.0
         version: 1.89.0
