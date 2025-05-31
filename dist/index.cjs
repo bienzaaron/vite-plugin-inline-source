@@ -129,6 +129,14 @@ function VitePluginInlineSource(opts) {
           console.log(transformResult.outputFiles[0].text);
           fileContent = transformResult.outputFiles[0].text;
         }
+        if (options.optimizeJs) {
+          const minifiedCode = (await (0, import_terser.minify)(fileContent, options.terserOptions)).code;
+          if (minifiedCode) {
+            fileContent = minifiedCode;
+          } else {
+            throw new Error("Unexpected error: Failed to minify JS");
+          }
+        }
       }
       fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");
       if (index !== prevPos) {
