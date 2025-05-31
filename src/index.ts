@@ -135,6 +135,7 @@ export default function VitePluginInlineSource(
 						"import.meta.env.SSR": `${env.isSsrBuild}`,
 						...envVarDefines,
 					},
+					packages: "bundle",
 				});
 
 				if (transformResult.errors.length != 0) {
