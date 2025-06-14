@@ -2,7 +2,7 @@ import { defineConfig } from "tsup";
 
 export default defineConfig({
 	format: ["cjs", "esm"],
-	target: "node18",
+	target: "node20",
 	sourcemap: true,
 	clean: true,
 	minify: false,
