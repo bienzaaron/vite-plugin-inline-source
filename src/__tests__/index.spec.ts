@@ -422,6 +422,98 @@ describe("js", () => {
 	});
 });
 
+describe("ts", () => {
+	const tsFileName = "script.ts";
+	const tsContent =
+		// language=ts
+		'/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;';
+
+	test("compiles ts by default", async () => {
+		const buildOutput = await build({
+			root: __dirname,
+			plugins: [
+				emitTestAssetPlugin(tsFileName, tsContent),
+				replaceIndexHtmlPlugin(
+					`<html><script inline-source i-should-be-preserved src="${tsFileName}" /></html>`,
+				),
+				inlineSource(),
+			],
+		});
+		expect(buildOutput).toMatchSnapshot();
+	});
+
+	test("does not compile ts when compileTs option is disabled", async () => {
+		const buildOutput = await build({
+			root: __dirname,
+			plugins: [
+				emitTestAssetPlugin(tsFileName, tsContent),
+				replaceIndexHtmlPlugin(
+					`<html><script inline-source i-should-be-preserved src="${tsFileName}" /></html>`,
+				),
+				inlineSource({
+					compileTs: false,
+				}),
+			],
+		});
+		expect(buildOutput).toMatchSnapshot();
+	});
+
+	test("does not minify compiled ts by default", async () => {
+		const buildOutput = await build({
+			root: __dirname,
+			plugins: [
+				emitTestAssetPlugin(tsFileName, tsContent),
+				replaceIndexHtmlPlugin(
+					`<html><script inline-source i-should-be-preserved src="${tsFileName}" /></html>`,
+				),
+				inlineSource({
+					compileTs: true,
+				}),
+			],
+		});
+		expect(buildOutput).toMatchSnapshot();
+	});
+
+	test("does not minify compiled ts when optimizeJs option is disabled", async () => {
+		const buildOutput = await build({
+			root: __dirname,
+			plugins: [
+				emitTestAssetPlugin(tsFileName, tsContent),
+				replaceIndexHtmlPlugin(
+					`<html><script inline-source i-should-be-preserved src="${tsFileName}" /></html>`,
+				),
+				inlineSource({
+					compileTs: true,
+					optimizeJs: false,
+				}),
+			],
+		});
+		expect(buildOutput).toMatchSnapshot();
+	});
+
+	test("minifies compiled ts when optimizeJs option is enabled, respecting terserOptions", async () => {
+		const buildOutput = await build({
+			root: __dirname,
+			plugins: [
+				emitTestAssetPlugin(tsFileName, tsContent),
+				replaceIndexHtmlPlugin(
+					`<html><script inline-source i-should-be-preserved src="${tsFileName}" /></html>`,
+				),
+				inlineSource({
+					compileTs: true,
+					optimizeJs: true,
+					terserOptions: {
+						compress: {
+							join_vars: false,
+						},
+					},
+				}),
+			],
+		});
+		expect(buildOutput).toMatchSnapshot();
+	});
+});
+
 test("custom replaceTags", async () => {
 	const buildOutput = await build({
 		root: __dirname,

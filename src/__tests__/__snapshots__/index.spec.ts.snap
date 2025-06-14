@@ -387,3 +387,130 @@ body {
   ],
 }
 `;
+
+exports[`ts > compiles ts by default 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.ts",
+      "name": "script.ts",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u = void 0;
+const foo = 123;
+const bar = 256;
+const baz = typeof u !== "undefined" ? foo : bar;
+</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`ts > does not compile ts when compileTs option is disabled 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.ts",
+      "name": "script.ts",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`ts > does not minify compiled ts by default 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.ts",
+      "name": "script.ts",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u = void 0;
+const foo = 123;
+const bar = 256;
+const baz = typeof u !== "undefined" ? foo : bar;
+</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`ts > does not minify compiled ts when optimizeJs option is disabled 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.ts",
+      "name": "script.ts",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u = void 0;
+const foo = 123;
+const bar = 256;
+const baz = typeof u !== "undefined" ? foo : bar;
+</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
+exports[`ts > minifies compiled ts when optimizeJs option is enabled, respecting terserOptions 1`] = `
+{
+  "output": [
+    {
+      "fileName": "script.ts",
+      "name": "script.ts",
+      "needsCodeReference": false,
+      "source": "/* foo */ const u = undefined;const foo: number = 123;const bar: number = 256;const baz = typeof u !== "undefined" ? foo : bar;",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><script
+             i-should-be-preserved  
+          >const u=void 0;const foo=123;const bar=256;const baz=256;</script></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;

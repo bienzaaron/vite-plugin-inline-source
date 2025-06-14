@@ -116,43 +116,47 @@ export default function VitePluginInlineSource(
 					fileContent = minifiedCode;
 				}
 			} else if (isTsFile && options.compileTs) {
-				const envVars = loadEnv(env.mode, process.cwd());
-				const envVarDefines = Object.entries(envVars).reduce<
-					Record<string, string>
-				>((prev, [key, value]) => {
-					if (key.startsWith("VITE")) prev[`import.meta.env.${key}`] = value;
-					return prev;
-				}, {});
-				const transformResult = await esbuild.build({
-					entryPoints: [filePath],
-					write: false,
-					define: {
-						"import.meta.env.MODE": `"${env.mode}"`,
-						"import.meta.env.BASE_URL": `"${config.base ?? "/"}"`,
-						"import.meta.env.PROD": `${process.env.NODE_ENV == "production"}`,
-						"import.meta.env.DEV": `${process.env.NODE_ENV != "production"}`,
-						"import.meta.env.SSR": `${env.isSsrBuild}`,
-						...envVarDefines,
-					},
-					bundle: true,
-				});
+				try {
+					const envVars = loadEnv(env.mode, process.cwd());
+					const envVarDefines = Object.entries(envVars).reduce<
+						Record<string, string>
+					>((prev, [key, value]) => {
+						if (key.startsWith("VITE")) prev[`import.meta.env.${key}`] = value;
+						return prev;
+					}, {});
 
-				if (transformResult.errors.length != 0) {
-					console.error(transformResult);
-					throw new Error(transformResult.errors.join("\n"));
-				} else {
-					console.log(transformResult.outputFiles[0].text);
-					fileContent = transformResult.outputFiles[0].text;
-				}
-				if (options.optimizeJs) {
-					const minifiedCode = (
-						await minifyJs(fileContent, options.terserOptions)
-					).code;
-					if (minifiedCode) {
-						fileContent = minifiedCode;
-					} else {
-						throw new Error("Unexpected error: Failed to minify JS");
+					const transformResult = await esbuild.transform(fileContent, {
+						loader: "ts",
+						define: {
+							"import.meta.env.MODE": `"${env.mode}"`,
+							"import.meta.env.BASE_URL": `"${config.base ?? "/"}"`,
+							"import.meta.env.PROD": `${process.env.NODE_ENV == "production"}`,
+							"import.meta.env.DEV": `${process.env.NODE_ENV != "production"}`,
+							"import.meta.env.SSR": `${env.isSsrBuild}`,
+							...envVarDefines,
+						},
+					});
+
+					fileContent = transformResult.code;
+
+					if (options.optimizeJs) {
+						try {
+							const minifiedResult = await minifyJs(
+								fileContent,
+								options.terserOptions,
+							);
+							if (minifiedResult.code) {
+								fileContent = minifiedResult.code;
+							}
+							// If minification returns empty/undefined, keep the original compiled code
+						} catch (error) {
+							console.warn("Failed to minify compiled TypeScript:", error);
+							// Keep the original compiled code if minification fails
+						}
 					}
+				} catch (error) {
+					console.error("Failed to compile TypeScript:", error);
+					throw error;
 				}
 			}
 			fileContent = fileContent.replace(/^<!DOCTYPE(.*?[^?])?>/, "");
