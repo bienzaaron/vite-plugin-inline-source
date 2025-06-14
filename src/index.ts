@@ -10,7 +10,7 @@ import {
 	type ConfigEnv,
 	type IndexHtmlTransformContext,
 	type Plugin,
-	type UserConfig,
+	type ResolvedConfig,
 	loadEnv,
 } from "vite";
 import z from "zod";
@@ -192,15 +192,15 @@ export default function VitePluginInlineSource(
 	}
 
 	let env: ConfigEnv;
-	let config: UserConfig;
+	let config: ResolvedConfig;
 
 	return {
 		name: "vite-plugin-inline-source",
-		configResolved(config) {
-			root = config.root ?? "";
+		configResolved(_config) {
+			root = _config.root ?? "";
+			config = _config;
 		},
-		config(c, e) {
-			config = c;
+		config(_, e) {
 			env = e;
 		},
 		transform(source, id) {
