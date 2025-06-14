@@ -1,5 +1,5 @@
 {
-	"extends": "@tsconfig/node18/tsconfig.json",
+	"extends": "@tsconfig/node20/tsconfig.json",
 	"include": ["src", "vite.config.ts", "tsup.config.ts"],
 	"compilerOptions": {
 		"outDir": "dist",
