@@ -55,7 +55,7 @@
 		"zod": "^3.25.64"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
+		"@biomejs/biome": "^2.0.4",
 		"@tsconfig/node20": "^20.1.5",
 		"@types/csso": "^5.0.4",
 		"@types/node": "^22.15.26",
