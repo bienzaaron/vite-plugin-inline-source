@@ -172,7 +172,7 @@ exports[`it then optimizes svg with custom options 1`] = `
       "fileName": "index.html",
       "name": undefined,
       "needsCodeReference": false,
-      "source": "<html><svg  i-should-be-preserved   viewBox="0 0 100 100"><path d="M0 0h100v100H0z"/></svg></html>",
+      "source": "<html><svg  i-should-be-preserved   viewBox="0 0 100 100"><title>hello</title><path d="M0 0h100v100H0z"/></svg></html>",
       "type": "asset",
     },
   ],
