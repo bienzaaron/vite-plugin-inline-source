@@ -71,7 +71,7 @@
 		"vitest": "^3.2.4"
 	},
 	"peerDependencies": {
-		"vite": "2.x || 3.x || 4.x || 5.x || 6.x || 7.x"
+		"vite": "5.x || 6.x || 7.x"
 	},
 	"lint-staged": {
 		"*.{js,ts,jsx,tsx,json,html}": "pnpm lint:fix --staged"
