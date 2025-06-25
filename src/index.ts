@@ -9,11 +9,12 @@ import { minify as minifyJs } from "terser";
 import {
 	type ConfigEnv,
 	type IndexHtmlTransformContext,
+	loadEnv,
 	type Plugin,
 	type ResolvedConfig,
-	loadEnv,
 } from "vite";
 import z from "zod";
+
 const { compileString: compileSass } = sass;
 
 const InlineSourceOptionsSchema = z
