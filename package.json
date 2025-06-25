@@ -67,11 +67,11 @@
 		"rollup": "^4.43.0",
 		"tsup": "^8.5.0",
 		"typescript": "^5.8.3",
-		"vite": "^6.3.5",
+		"vite": "^7.0.0",
 		"vitest": "^3.2.3"
 	},
 	"peerDependencies": {
-		"vite": "2.x || 3.x || 4.x || 5.x || 6.x"
+		"vite": "2.x || 3.x || 4.x || 5.x || 6.x || 7.x"
 	},
 	"lint-staged": {
 		"*.{js,ts,jsx,tsx,json,html}": "pnpm lint:fix --staged"
