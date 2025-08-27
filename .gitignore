@@ -17,3 +17,5 @@ bun.lockb
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+actions-runner
