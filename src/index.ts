@@ -13,46 +13,53 @@ import {
 	type Plugin,
 	type ResolvedConfig,
 } from "vite";
-import z from "zod";
+import { z } from "zod";
 
 const { compileString: compileSass } = sass;
 
-const InlineSourceOptionsSchema = z
-	.object({
-		replaceTags: z
-			.array(z.string())
-			.default(["svg", "math"])
-			.describe(
-				"Tags that should be replaced entirely when inlining elements. The default behavior is to preserve the tags and place the content from the source file inside them.",
-			),
-		optimizeSvgs: z
-			.boolean()
-			.default(true)
-			.describe("Whether or not to optimize SVGs using svgo"),
-		compileSass: z
-			.boolean()
-			.default(false)
-			.describe("Whether or not to compile SASS using sass"),
-		optimizeCss: z
-			.boolean()
-			.default(false)
-			.describe("Whether or not to optimize CSS using csso"),
-		compileTs: z
-			.boolean()
-			.default(true)
-			.describe(
-				"Whether or not to transform TypeScript to JavaScript using esbuild",
-			),
-		optimizeJs: z
-			.boolean()
-			.default(false)
-			.describe("Whether or not to optimize JS using terser"),
-		svgoOptions: z.object({}).passthrough().default({}),
-		sassOptions: z.object({}).passthrough().default({}),
-		cssoOptions: z.object({}).passthrough().default({}),
-		terserOptions: z.object({}).passthrough().default({}),
-	})
-	.default({});
+const InlineSourceOptionsSchema = z.object({
+	replaceTags: z
+		.array(z.string())
+		.optional()
+		.default(["svg", "math"])
+		.describe(
+			"Tags that should be replaced entirely when inlining elements. The default behavior is to preserve the tags and place the content from the source file inside them.",
+		),
+	optimizeSvgs: z
+		.boolean()
+		.optional()
+		.default(true)
+		.describe("Whether or not to optimize SVGs using svgo"),
+	compileSass: z
+		.boolean()
+		.optional()
+		.default(false)
+		.describe("Whether or not to compile SASS using sass"),
+	optimizeCss: z
+		.boolean()
+		.optional()
+		.default(false)
+		.default(false)
+		.describe("Whether or not to optimize CSS using csso"),
+	compileTs: z
+		.boolean()
+		.optional()
+		.default(false)
+		.default(true)
+		.describe(
+			"Whether or not to transform TypeScript to JavaScript using esbuild",
+		),
+	optimizeJs: z
+		.boolean()
+		.optional()
+		.default(false)
+		.default(false)
+		.describe("Whether or not to optimize JS using terser"),
+	svgoOptions: z.looseObject({}).optional().default({}),
+	sassOptions: z.looseObject({}).optional().default({}),
+	cssoOptions: z.looseObject({}).optional().default({}),
+	terserOptions: z.looseObject({}).optional().default({}),
+});
 
 type InlineSourceOptions = z.input<typeof InlineSourceOptionsSchema>;
 
@@ -62,7 +69,7 @@ const PATTERN =
 export default function VitePluginInlineSource(
 	opts?: InlineSourceOptions,
 ): Plugin {
-	const options = InlineSourceOptionsSchema.parse(opts);
+	const options = InlineSourceOptionsSchema.parse(opts ?? {});
 	let root = "";
 
 	async function transformHtml(
