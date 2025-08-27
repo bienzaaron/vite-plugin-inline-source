@@ -1,11 +1,18 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.0.5/schema.json",
-	"assist": { "actions": { "source": { "organizeImports": "on" } } },
+	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	},
 	"files": {
 		"includes": [
 			"**",
 			"!**/dist",
 			"!**/node_modules",
+			"!**/actions-runner",
 			"!**/coverage",
 			"!**/package.json",
 			"!**/test-report.json"
