@@ -1,6 +1,4 @@
-import type { BinaryLike, BinaryToTextEncoding } from "node:crypto";
 import { unlink, writeFile } from "node:fs/promises";
-import { createRequire } from "node:module";
 import path from "node:path";
 import type { PluginContext } from "rollup";
 import type {
@@ -9,32 +7,11 @@ import type {
 	Plugin,
 	ResolvedConfig,
 	UserConfig,
+	ViteDevServer,
 } from "vite";
 import * as vite from "vite";
 import { describe, expect, test, vi } from "vitest";
 import inlineSource from "../index.js";
-
-const require = createRequire(import.meta.url);
-type CryptoModuleWithHash = typeof import("node:crypto") & {
-	hash?: (
-		algorithm: string,
-		data: BinaryLike,
-		encoding: BinaryToTextEncoding,
-	) => string;
-};
-const cryptoPolyfill = require("crypto") as CryptoModuleWithHash;
-if (typeof cryptoPolyfill.hash !== "function") {
-	const hashPolyfill = (
-		algorithm: string,
-		data: BinaryLike,
-		encoding: BinaryToTextEncoding,
-	): string => {
-		const hash = cryptoPolyfill.createHash(algorithm);
-		hash.update(data);
-		return hash.digest(encoding);
-	};
-	cryptoPolyfill.hash = hashPolyfill;
-}
 
 const build: typeof vite.build = async (...args) => {
 	const out = await vite.build(...args);
@@ -585,9 +562,12 @@ describe("direct transform usage", () => {
 			plugin.configResolved.handler.call(pluginContext, resolvedConfig);
 		}
 
-		const transformContext = {
-			server: {} as Record<string, unknown>,
-		} as IndexHtmlTransformContext;
+		const transformContext: IndexHtmlTransformContext = {
+			path: "index.html",
+			filename: "index.html",
+			originalUrl: "index.html",
+			server: {} as ViteDevServer,
+		};
 		const result =
 			typeof plugin.transformIndexHtml === "function"
 				? await plugin.transformIndexHtml.call(

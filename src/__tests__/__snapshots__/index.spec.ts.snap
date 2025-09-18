@@ -106,7 +106,7 @@ exports[`handles custom attribute and defaults to 'inline-source' 1`] = `
       "name": undefined,
       "needsCodeReference": false,
       "source": "<html><style
-            custom-inline-attribute i-should-be-preserved  
+             i-should-be-preserved  
           >body { background-color: red; }</style></html>",
       "type": "asset",
     },

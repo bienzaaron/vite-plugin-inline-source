@@ -17,6 +17,9 @@ import { z } from "zod";
 
 const { compileString: compileSass } = sass;
 
+const escapeRegExp = (value: string): string =>
+	value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 const InlineSourceOptionsSchema = z.object({
 	customAttribute: z
 		.string()
@@ -74,6 +77,11 @@ export default function VitePluginInlineSource(
 	opts?: InlineSourceOptions,
 ): Plugin {
 	const options = InlineSourceOptionsSchema.parse(opts ?? {});
+	const escapedAttribute = escapeRegExp(options.customAttribute);
+	const customAttributePattern = new RegExp(`\\b${escapedAttribute}\\b`);
+	const customAttributeGlobalPattern = new RegExp(escapedAttribute, "g");
+	const stripCustomAttribute = (segment: string) =>
+		segment.replace(customAttributeGlobalPattern, "");
 	let root = "";
 
 	async function transformHtml(
@@ -92,7 +100,7 @@ export default function VitePluginInlineSource(
 			const isJsFile = path.extname(fileName).toLowerCase() === ".js";
 			const isTsFile = path.extname(fileName).toLowerCase() === ".ts";
 			const isImg = tagName.toLowerCase() === "img";
-			const shouldInline = new RegExp(`\\b${options.customAttribute}\\b`).test(
+			const shouldInline = customAttributePattern.test(
 				preAttributes + " " + postAttributes,
 			);
 
@@ -176,23 +184,19 @@ export default function VitePluginInlineSource(
 			if (index !== prevPos) {
 				result.push(source.slice(prevPos, index));
 			}
+			const cleanedPreAttributes = stripCustomAttribute(preAttributes);
+			const cleanedPostAttributes = stripCustomAttribute(postAttributes);
 			if (options.replaceTags.includes(tagName)) {
 				result.push(
 					fileContent.replace(
 						new RegExp(`^<\\s*${tagName}`),
-						`<${tagName} ${preAttributes.replace(
-							new RegExp(options.customAttribute, "g"),
-							"",
-						)} ${postAttributes.replace(new RegExp(options.customAttribute, "g"), "")}`,
+						`<${tagName} ${cleanedPreAttributes} ${cleanedPostAttributes}`,
 					),
 				);
 			} else {
 				result.push(
 					`<${tagName}
-            ${preAttributes.replace(
-							/inline-source/g,
-							"",
-						)} ${postAttributes.replace(/inline-source/g, "")}
+            ${cleanedPreAttributes} ${cleanedPostAttributes}
           >${fileContent}</${tagName}>`,
 				);
 			}
