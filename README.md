@@ -50,6 +50,13 @@ body {
 
 ## Options
 
+### customAttribute
+
+The custom attribute to use for triggering inlining of source files. By default, the plugin uses `inline-source`. You can set this to a different attribute name if needed.
+
+- **type**: `string`
+- **default**: `inline-source`
+
 ### replaceTags
 
 Tags that should be replaced in the HTML file.

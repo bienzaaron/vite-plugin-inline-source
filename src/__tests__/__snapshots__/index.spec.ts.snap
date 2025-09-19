@@ -91,6 +91,29 @@ exports[`custom replaceTags 1`] = `
 }
 `;
 
+exports[`handles custom attribute and defaults to 'inline-source' 1`] = `
+{
+  "output": [
+    {
+      "fileName": "style.css",
+      "name": "style.css",
+      "needsCodeReference": false,
+      "source": "body { background-color: red; }",
+      "type": "asset",
+    },
+    {
+      "fileName": "index.html",
+      "name": undefined,
+      "needsCodeReference": false,
+      "source": "<html><style
+             i-should-be-preserved  
+          >body { background-color: red; }</style></html>",
+      "type": "asset",
+    },
+  ],
+}
+`;
+
 exports[`it then doesn't mess with tags it shouldn't mess with 1`] = `
 {
   "output": [

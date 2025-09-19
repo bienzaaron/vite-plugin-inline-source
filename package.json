@@ -1,79 +1,79 @@
 {
-	"name": "vite-plugin-inline-source",
-	"version": "4.0.1",
-	"description": "A vite plugin for inlining files into HTML",
-	"files": [
-		"dist"
-	],
-	"main": "./dist/index.cjs",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.ts",
-	"packageManager": "pnpm@10.12.1+sha512.f0dda8580f0ee9481c5c79a1d927b9164f2c478e90992ad268bbb2465a736984391d6333d2c327913578b2804af33474ca554ba29c04a8b13060a717675ae3ac",
-	"exports": {
-		".": {
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
-		}
-	},
-	"type": "module",
-	"keywords": [
-		"vite",
-		"plugin",
-		"markup",
-		"inline",
-		"css",
-		"svg"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/bienzaaron/vite-plugin-inline-source.git"
-	},
-	"bugs": {
-		"url": "https://github.com/bienzaaron/vite-plugin-inline-source/issues"
-	},
-	"homepage": "https://github.com/bienzaaron/vite-plugin-inline-source#readme",
-	"author": "Aaron Bienz <bienzaaronj@gmail.com>",
-	"license": "MIT",
-	"scripts": {
-		"pipeline": "pnpm lint && pnpm test && pnpm typecheck && pnpm build && pnpm lint:publish",
-		"typecheck": "tsc -p tsconfig.json",
-		"build": "tsup",
-		"lint": "biome check",
-		"lint:fix": "biome check --write --no-errors-on-unmatched",
-		"lint:publish": "publint",
-		"test": "vitest run --coverage",
-		"test:watch": "vitest",
-		"prepare": "husky"
-	},
-	"dependencies": {
-		"csso": "^5.0.5",
-		"esbuild": "^0.25.9",
-		"sass": "^1.91.0",
-		"svgo": "^4.0.0",
-		"terser": "^5.43.1",
-		"tslib": "^2.8.1",
-		"zod": "^4.1.4"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.2.2",
-		"@tsconfig/node20": "^20.1.6",
-		"@types/csso": "^5.0.4",
-		"@types/node": "^20.19.11",
-		"@vitest/coverage-v8": "^3.2.4",
-		"husky": "^9.1.7",
-		"lint-staged": "^16.1.5",
-		"prettier": "^3.6.2",
-		"publint": "^0.3.12",
-		"rollup": "^4.49.0",
-		"tsup": "^8.5.0",
-		"typescript": "^5.9.2",
-		"vite": "^7.1.3",
-		"vitest": "^3.2.4"
-	},
-	"peerDependencies": {
-		"vite": "5.x || 6.x || 7.x"
-	},
-	"lint-staged": {
-		"*.{js,ts,jsx,tsx,json,html}": "pnpm lint:fix --staged"
-	}
+  "name": "vite-plugin-inline-source",
+  "version": "4.0.1",
+  "description": "A vite plugin for inlining files into HTML",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "type": "module",
+  "keywords": [
+    "vite",
+    "plugin",
+    "markup",
+    "inline",
+    "css",
+    "svg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bienzaaron/vite-plugin-inline-source.git"
+  },
+  "bugs": {
+    "url": "https://github.com/bienzaaron/vite-plugin-inline-source/issues"
+  },
+  "homepage": "https://github.com/bienzaaron/vite-plugin-inline-source#readme",
+  "author": "Aaron Bienz <bienzaaronj@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "pipeline": "pnpm lint && pnpm test && pnpm typecheck && pnpm build && pnpm lint:publish",
+    "typecheck": "tsc -p tsconfig.json",
+    "build": "tsup",
+    "lint": "biome check",
+    "lint:fix": "biome check --write --no-errors-on-unmatched",
+    "lint:publish": "publint",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "csso": "^5.0.5",
+    "esbuild": "^0.25.9",
+    "sass": "^1.91.0",
+    "svgo": "^4.0.0",
+    "terser": "^5.43.1",
+    "tslib": "^2.8.1",
+    "zod": "^4.1.4"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
+    "@tsconfig/node20": "^20.1.6",
+    "@types/csso": "^5.0.4",
+    "@types/node": "^20.19.11",
+    "@vitest/coverage-v8": "^3.2.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.5",
+    "prettier": "^3.6.2",
+    "publint": "^0.3.12",
+    "rollup": "^4.49.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": {
+    "vite": "5.x || 6.x || 7.x"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,json,html}": "pnpm lint:fix --staged"
+  }
 }
