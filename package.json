@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-inline-source",
-  "version": "4.0.1",
+  "version": "4.1.0",
   "description": "A vite plugin for inlining files into HTML",
   "files": [
     "dist"
