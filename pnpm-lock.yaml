@@ -28,7 +28,7 @@ importers:
         version: 2.8.1
       zod:
         specifier: ^4.1.4
-        version: 4.1.4
+        version: 4.1.9
     devDependencies:
       '@biomejs/biome':
         specifier: ^2.2.4
@@ -1418,8 +1418,8 @@ packages:
     engines: {node: '>= 14.6'}
     hasBin: true
 
-  zod@4.1.4:
-    resolution: {integrity: sha512-2YqJuWkU6IIK9qcE4k1lLLhyZ6zFw7XVRdQGpV97jEIZwTrscUw+DY31Xczd8nwaoksyJUIxCojZXwckJovWxA==}
+  zod@4.1.9:
+    resolution: {integrity: sha512-HI32jTq0AUAC125z30E8bQNz0RQ+9Uc+4J7V97gLYjZVKRjeydPgGt6dvQzFrav7MYOUGFqqOGiHpA/fdbd0cQ==}
 
 snapshots:
 
@@ -2599,4 +2599,4 @@ snapshots:
 
   yaml@2.8.1: {}
 
-  zod@4.1.4: {}
+  zod@4.1.9: {}
