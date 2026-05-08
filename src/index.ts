@@ -154,8 +154,8 @@ export default function VitePluginInlineSource(
 					const envVarDefines = Object.entries(envVars).reduce<
 						Record<string, string>
 					>((prev, [key, value]) => {
-						if (key.startsWith("VITE")) {
-							prev[`import.meta.env.${key}`] = value;
+						if (key.startsWith("VITE"))
+							prev[`import.meta.env.${key}`] = JSON.stringify(value);
 						}
 						return prev;
 					}, {});
