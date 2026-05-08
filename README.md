@@ -7,6 +7,19 @@ A Vite plugin which inlines source files in HTML files where the `inline-source`
 
 This plugin was heavily influenced by [markup-inline-loader](https://github.com/asnowwolf/markup-inline-loader) for webpack. I wanted the same functionality, but couldn't find a suitable replacement in the Vite ecosystem.
 
+## Requirements
+
+- Node.js 22 or newer
+- Vite 8
+
+This package is published as ESM only.
+
+## Installation
+
+```bash
+pnpm add -D vite-plugin-inline-source
+```
+
 ## Example Usage
 
 Check out the interactive demo on [StackBlitz](https://stackblitz.com/edit/vite-cc3cbk?file=vite.config.js)!
