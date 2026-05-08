@@ -1,25 +1,25 @@
 allowBuilds:
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   esbuild: true
 
 minimumReleaseAge: 1440
 minimumReleaseAgeExclude:
-  - '@rolldown/binding-android-arm64@1.0.0'
-  - '@rolldown/binding-darwin-arm64@1.0.0'
-  - '@rolldown/binding-darwin-x64@1.0.0'
-  - '@rolldown/binding-freebsd-x64@1.0.0'
-  - '@rolldown/binding-linux-arm-gnueabihf@1.0.0'
-  - '@rolldown/binding-linux-arm64-gnu@1.0.0'
-  - '@rolldown/binding-linux-arm64-musl@1.0.0'
-  - '@rolldown/binding-linux-ppc64-gnu@1.0.0'
-  - '@rolldown/binding-linux-s390x-gnu@1.0.0'
-  - '@rolldown/binding-linux-x64-gnu@1.0.0'
-  - '@rolldown/binding-linux-x64-musl@1.0.0'
-  - '@rolldown/binding-openharmony-arm64@1.0.0'
-  - '@rolldown/binding-wasm32-wasi@1.0.0'
-  - '@rolldown/binding-win32-arm64-msvc@1.0.0'
-  - '@rolldown/binding-win32-x64-msvc@1.0.0'
-  - '@rolldown/pluginutils@1.0.0'
+  - "@rolldown/binding-android-arm64@1.0.0"
+  - "@rolldown/binding-darwin-arm64@1.0.0"
+  - "@rolldown/binding-darwin-x64@1.0.0"
+  - "@rolldown/binding-freebsd-x64@1.0.0"
+  - "@rolldown/binding-linux-arm-gnueabihf@1.0.0"
+  - "@rolldown/binding-linux-arm64-gnu@1.0.0"
+  - "@rolldown/binding-linux-arm64-musl@1.0.0"
+  - "@rolldown/binding-linux-ppc64-gnu@1.0.0"
+  - "@rolldown/binding-linux-s390x-gnu@1.0.0"
+  - "@rolldown/binding-linux-x64-gnu@1.0.0"
+  - "@rolldown/binding-linux-x64-musl@1.0.0"
+  - "@rolldown/binding-openharmony-arm64@1.0.0"
+  - "@rolldown/binding-wasm32-wasi@1.0.0"
+  - "@rolldown/binding-win32-arm64-msvc@1.0.0"
+  - "@rolldown/binding-win32-x64-msvc@1.0.0"
+  - "@rolldown/pluginutils@1.0.0"
   - rolldown-plugin-dts@0.25.0
   - rolldown@1.0.0
   - tsdown@0.22.0

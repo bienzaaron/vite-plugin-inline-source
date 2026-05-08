@@ -3,7 +3,6 @@
 [![Node.js CI](https://github.com/bienzaaron/vite-plugin-inline-source/actions/workflows/ci.yml/badge.svg)](https://github.com/bienzaaron/vite-plugin-inline-source/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/vite-plugin-inline-source.svg?style=flat)](https://www.npmjs.com/package/vite-plugin-inline-source)
 
-
 A Vite plugin which inlines source files in HTML files where the `inline-source` attribute is present. This is similar in premise to [vite-plugin-singlefile](https://github.com/richardtallent/vite-plugin-singlefile), but allows you to control which assets are inlined.
 
 This plugin was heavily influenced by [markup-inline-loader](https://github.com/asnowwolf/markup-inline-loader) for webpack. I wanted the same functionality, but couldn't find a suitable replacement in the Vite ecosystem.
@@ -13,38 +12,41 @@ This plugin was heavily influenced by [markup-inline-loader](https://github.com/
 Check out the interactive demo on [StackBlitz](https://stackblitz.com/edit/vite-cc3cbk?file=vite.config.js)!
 
 **vite.config.ts**
+
 ```typescript
 import { defineConfig } from "vite";
 import inlineSource from "vite-plugin-inline-source";
 
 export default defineConfig({
-  plugins: [
-    inlineSource(),
-  ],
+	plugins: [inlineSource()],
 });
 ```
 
 **style.css**
+
 ```css
 body {
-  background-color: red;
+	background-color: red;
 }
 ```
 
 **index.html**
+
 ```html
 <html>
-  <style inline-source src="style.css"></style>
+	<style inline-source src="style.css"></style>
 </html>
 ```
 
 **Resulting index.html after build**
+
 ```html
 <html>
-  <style inline-source>body {
-  background-color: red;
-}
-  </style>
+	<style inline-source>
+		body {
+			background-color: red;
+		}
+	</style>
 </html>
 ```
 

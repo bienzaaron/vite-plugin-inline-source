@@ -1,0 +1,20 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": ["typescript", "vitest"],
+	"env": {
+		"builtin": true,
+		"node": true
+	},
+	"ignorePatterns": ["dist", "coverage", "test-report.json"],
+	"rules": {
+		"@typescript-eslint/no-explicit-any": "error"
+	},
+	"overrides": [
+		{
+			"files": ["*.spec.ts"],
+			"env": {
+				"vitest": true
+			}
+		}
+	]
+}
