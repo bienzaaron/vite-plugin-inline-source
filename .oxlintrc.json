@@ -14,7 +14,6 @@
 	"rules": {
 		"@typescript-eslint/no-explicit-any": "error",
 		"eslint/capitalized-comments": "off",
-		"eslint/curly": "off",
 		"eslint/func-style": "off",
 		"eslint/id-length": "off",
 		"eslint/init-declarations": "off",
@@ -23,8 +22,6 @@
 		"eslint/no-continue": "off",
 		"eslint/no-magic-numbers": "off",
 		"eslint/no-ternary": "off",
-		"eslint/prefer-destructuring": "off",
-		"eslint/prefer-template": "off",
 		"eslint/sort-imports": "off",
 		"eslint/sort-keys": "off",
 		"typescript/consistent-type-definitions": "off",
@@ -33,7 +30,6 @@
 		"vitest/no-importing-vitest-globals": "off",
 		"vitest/no-alias-methods": "off",
 		"vitest/no-unneeded-async-expect-function": "off",
-		"vitest/prefer-mock-return-shorthand": "off",
 		"vitest/prefer-expect-assertions": "off",
 		"vitest/require-top-level-describe": "off"
 	},

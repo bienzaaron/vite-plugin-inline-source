@@ -611,9 +611,7 @@ describe("direct transform usage", () => {
 	});
 
 	test("warns but keeps code when terser fails to minify compiled TypeScript", async () => {
-		const consoleSpy = vi
-			.spyOn(console, "warn")
-			.mockImplementation(() => undefined);
+		const consoleSpy = vi.spyOn(console, "warn").mockReturnValue(undefined);
 		try {
 			const result = await runTransform(
 				'<html><script inline-source src="fixtures/env-script.ts"></script></html>',
@@ -638,9 +636,7 @@ describe("direct transform usage", () => {
 	});
 
 	test("rethrows errors when TypeScript compilation fails", async () => {
-		const consoleSpy = vi
-			.spyOn(console, "error")
-			.mockImplementation(() => undefined);
+		const consoleSpy = vi.spyOn(console, "error").mockReturnValue(undefined);
 		const badScriptPath = path.join(
 			__dirname,
 			"fixtures",
@@ -659,7 +655,7 @@ describe("direct transform usage", () => {
 						compileTs: true,
 					},
 				),
-			).rejects.toThrowError();
+			).rejects.toThrowError("Transform failed with 1 error");
 			expect(consoleSpy).toHaveBeenCalledWith(
 				"Failed to compile TypeScript:",
 				expect.any(Error),
