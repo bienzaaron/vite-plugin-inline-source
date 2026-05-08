@@ -2,7 +2,6 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { minify as minifyCss } from "csso";
 import * as esbuild from "esbuild";
-import type { TransformPluginContext } from "rollup";
 import * as sass from "sass";
 import { optimize as optimizeSvg } from "svgo";
 import { minify as minifyJs } from "terser";
@@ -69,6 +68,11 @@ const InlineSourceOptionsSchema = z.object({
 });
 
 type InlineSourceOptions = z.input<typeof InlineSourceOptionsSchema>;
+type LoadContext = {
+	load: (options: {
+		id: string;
+	}) => Promise<{ code?: string } | null | undefined>;
+};
 
 const PATTERN =
 	/<([A-z0-9-]+)\s+([^>]*?)src\s*=\s*"([^>]*?)"([^>]*?)\s*((\/>)|(>\s*<\/\s*\1\s*>))/gi;
@@ -86,7 +90,7 @@ export default function VitePluginInlineSource(
 
 	async function transformHtml(
 		source: string,
-		ctx: TransformPluginContext | IndexHtmlTransformContext,
+		ctx: LoadContext | IndexHtmlTransformContext,
 	) {
 		const result = [];
 		const tokens = source.matchAll(PATTERN);
@@ -110,11 +114,20 @@ export default function VitePluginInlineSource(
 
 			const filePath = root ? path.join(root, fileName) : fileName;
 
-			let fileContent: string = (ctx as IndexHtmlTransformContext).server
-				? (await readFile(`${filePath}`)).toString()
-				: // @ts-expect-error don't know these types aren't right
-					(await ctx.load({ id: `${filePath}?raw` })).ast?.body?.[0].declaration
-						.value;
+			let fileContent: string;
+			if ((ctx as IndexHtmlTransformContext).server) {
+				fileContent = (await readFile(`${filePath}`)).toString();
+			} else if ("load" in ctx) {
+				const loaded = await ctx.load({ id: `${filePath}?raw` });
+				const rawCode = loaded?.code?.trim();
+				const rawValue = rawCode?.match(/^export default (.*);?$/s)?.[1];
+				if (!rawValue) {
+					throw new Error(`Failed to load inline source: ${fileName}`);
+				}
+				fileContent = JSON.parse(rawValue.replace(/;$/, ""));
+			} else {
+				throw new Error(`Failed to load inline source: ${fileName}`);
+			}
 			if (isSvgFile && options.optimizeSvgs) {
 				fileContent = optimizeSvg(fileContent, options.svgoOptions).data;
 			} else if (isCssFile && options.optimizeCss) {
@@ -224,7 +237,7 @@ export default function VitePluginInlineSource(
 				return null;
 			}
 
-			return transformHtml(source, this);
+			return transformHtml(source, this as LoadContext);
 		},
 		transformIndexHtml(source, ctx) {
 			return transformHtml(source, ctx);
