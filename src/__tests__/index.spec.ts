@@ -1,6 +1,5 @@
 import { unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { PluginContext } from "rollup";
 import type {
 	ConfigEnv,
 	IndexHtmlTransformContext,
@@ -13,22 +12,32 @@ import * as vite from "vite";
 import { describe, expect, test, vi } from "vitest";
 import inlineSource from "../index.js";
 
-const build: typeof vite.build = async (...args) => {
+type BuildOutputItem = {
+	fileName: string;
+	name?: string;
+	source?: string | Uint8Array;
+	type: "asset" | "chunk";
+};
+
+type BuildOutput = {
+	output: readonly BuildOutputItem[];
+};
+
+const normalizeBuildOutput = (out: BuildOutput) => ({
+	output: out.output.map((o) => ({
+		fileName: o.fileName,
+		name: o.name,
+		source: o.source,
+		type: o.type,
+	})),
+});
+
+const build = async (...args: Parameters<typeof vite.build>) => {
 	const out = await vite.build(...args);
 	if (Array.isArray(out)) {
-		for (const o of out.flatMap((o) => o.output)) {
-			delete (o as { originalFileName?: string }).originalFileName;
-			delete (o as { originalFileNames?: string[] }).originalFileNames;
-			delete (o as { names?: string[] }).names;
-		}
+		return out.map(normalizeBuildOutput);
 	} else if ("output" in out) {
-		for (const o of out.output) {
-			if ("originalFileName" in o) {
-				delete (o as { originalFileName?: string }).originalFileName;
-				delete (o as { originalFileNames?: string[] }).originalFileNames;
-				delete (o as { names?: string[] }).names;
-			}
-		}
+		return normalizeBuildOutput(out);
 	}
 	return out;
 };
@@ -46,7 +55,7 @@ const emitTestAssetPlugin = (fileName: string, source: string): Plugin => ({
 	},
 	load(id) {
 		if (id.split("?")[0].endsWith(fileName)) {
-			return `export default '${source}'`;
+			return `export default ${JSON.stringify(source)}`;
 		}
 	},
 });
@@ -154,8 +163,8 @@ test("it then optimizes svg with default options", async () => {
 	expect(buildOutput).toMatchSnapshot();
 });
 
-test("fails gracefully when svg optimization fails", () => {
-	expect(async () => {
+test("fails gracefully when svg optimization fails", async () => {
+	await expect(async () => {
 		await build({
 			root: __dirname,
 			plugins: [
@@ -258,26 +267,24 @@ describe("css", () => {
 	});
 
 	test("fails gracefully with empty content", async () => {
-		(
-			await expect(async () => {
-				await build({
-					root: __dirname,
-					plugins: [
-						emitTestAssetPlugin(cssFileName, " "),
-						replaceIndexHtmlPlugin(
-							`<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`,
-						),
-						inlineSource({
-							optimizeCss: true,
-						}),
-					],
-				});
-			})
-		).rejects.toThrowError("Failed to minify CSS");
+		await expect(async () => {
+			await build({
+				root: __dirname,
+				plugins: [
+					emitTestAssetPlugin(cssFileName, " "),
+					replaceIndexHtmlPlugin(
+						`<html><style inline-source i-should-be-preserved src="${cssFileName}" /></html>`,
+					),
+					inlineSource({
+						optimizeCss: true,
+					}),
+				],
+			});
+		}).rejects.toThrowError("Failed to minify CSS");
 	});
 
-	test("fails gracefully when css minification fails", () => {
-		expect(async () => {
+	test("fails gracefully when css minification fails", async () => {
+		await expect(async () => {
 			await build({
 				root: __dirname,
 				plugins: [
@@ -422,8 +429,8 @@ describe("js", () => {
 		expect(buildOutput).toMatchSnapshot();
 	});
 
-	test("fails gracefully when js minification fails", () => {
-		expect(async () => {
+	test("fails gracefully when js minification fails", async () => {
+		await expect(async () => {
 			await build({
 				root: __dirname,
 				plugins: [
@@ -544,7 +551,7 @@ describe("direct transform usage", () => {
 		options?: Parameters<typeof inlineSource>[0],
 	) => {
 		const plugin = inlineSource(options);
-		const pluginContext = {} as PluginContext;
+		const pluginContext = {} as never;
 		const userConfig = {} as UserConfig;
 		if (typeof plugin.config === "function") {
 			plugin.config.call(pluginContext, userConfig, baseEnv);
@@ -604,9 +611,7 @@ describe("direct transform usage", () => {
 	});
 
 	test("warns but keeps code when terser fails to minify compiled TypeScript", async () => {
-		const consoleSpy = vi
-			.spyOn(console, "warn")
-			.mockImplementation(() => undefined);
+		const consoleSpy = vi.spyOn(console, "warn").mockReturnValue(undefined);
 		try {
 			const result = await runTransform(
 				'<html><script inline-source src="fixtures/env-script.ts"></script></html>',
@@ -631,9 +636,7 @@ describe("direct transform usage", () => {
 	});
 
 	test("rethrows errors when TypeScript compilation fails", async () => {
-		const consoleSpy = vi
-			.spyOn(console, "error")
-			.mockImplementation(() => undefined);
+		const consoleSpy = vi.spyOn(console, "error").mockReturnValue(undefined);
 		const badScriptPath = path.join(
 			__dirname,
 			"fixtures",
@@ -652,7 +655,7 @@ describe("direct transform usage", () => {
 						compileTs: true,
 					},
 				),
-			).rejects.toThrowError();
+			).rejects.toThrowError("Transform failed with 1 error");
 			expect(consoleSpy).toHaveBeenCalledWith(
 				"Failed to compile TypeScript:",
 				expect.any(Error),
