@@ -8,7 +8,7 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "packageManager": "pnpm@10.16.1+sha512.0e155aa2629db8672b49e8475da6226aa4bdea85fdcdfdc15350874946d4f3c91faaf64cbdc4a5d1ab8002f473d5c3fcedcd197989cf0390f9badd3c04678706",
+  "packageManager": "pnpm@11.0.8",
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -16,6 +16,9 @@
     }
   },
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "keywords": [
     "vite",
     "plugin",
@@ -56,9 +59,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
-    "@tsconfig/node20": "^20.1.6",
+    "@tsconfig/node22": "^22.0.5",
     "@types/csso": "^5.0.4",
-    "@types/node": "^20.19.11",
+    "@types/node": "^22.19.17",
     "@vitest/coverage-v8": "^3.2.4",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.5",

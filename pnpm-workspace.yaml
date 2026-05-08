@@ -1,4 +1,5 @@
-ignoredBuiltDependencies:
-  - esbuild
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
 
 minimumReleaseAge: 1440
