@@ -3,3 +3,9 @@ allowBuilds:
   esbuild: true
 
 minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - '@rolldown/*'
+  - rolldown
+  - rolldown-plugin-dts
+  - tsdown
+  - typescript
