@@ -18,6 +18,8 @@ jobs:
       - run: corepack enable && corepack install && corepack prepare --activate
       - run: pnpm i --frozen-lockfile
       - run: pnpm pipeline
+      - run: npm install -g npm@latest
+      - run: npm --version
       - run: npm publish --provenance
       - name: Release
         uses: softprops/action-gh-release@v2
