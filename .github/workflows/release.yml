@@ -18,9 +18,7 @@ jobs:
       - run: corepack enable && corepack install && corepack prepare --activate
       - run: pnpm i --frozen-lockfile
       - run: pnpm pipeline
-      - run: pnpm npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --provenance
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
@@ -28,3 +26,4 @@ jobs:
 
 permissions:
   contents: write
+  id-token: write
