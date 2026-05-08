@@ -105,7 +105,7 @@ export default function VitePluginInlineSource(
 			const isTsFile = path.extname(fileName).toLowerCase() === ".ts";
 			const isImg = tagName.toLowerCase() === "img";
 			const shouldInline = customAttributePattern.test(
-				preAttributes + " " + postAttributes,
+				`${preAttributes} ${postAttributes}`,
 			);
 
 			if ((isImg && !isSvgFile) || !shouldInline) {
@@ -137,7 +137,7 @@ export default function VitePluginInlineSource(
 				}
 				fileContent = minifiedCode;
 			} else if (isSassFile && options.compileSass) {
-				const css = compileSass(fileContent, options.sassOptions).css;
+				const { css } = compileSass(fileContent, options.sassOptions);
 				fileContent = options.optimizeCss
 					? minifyCss(css, options.cssoOptions).css
 					: css;
@@ -154,7 +154,9 @@ export default function VitePluginInlineSource(
 					const envVarDefines = Object.entries(envVars).reduce<
 						Record<string, string>
 					>((prev, [key, value]) => {
-						if (key.startsWith("VITE")) prev[`import.meta.env.${key}`] = value;
+						if (key.startsWith("VITE")) {
+							prev[`import.meta.env.${key}`] = value;
+						}
 						return prev;
 					}, {});
 

@@ -1,0 +1,44 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": ["typescript", "vitest"],
+	"env": {
+		"builtin": true,
+		"node": true
+	},
+	"categories": {
+		"perf": "error",
+		"style": "error",
+		"suspicious": "error"
+	},
+	"ignorePatterns": ["dist", "coverage", "test-report.json"],
+	"rules": {
+		"@typescript-eslint/no-explicit-any": "error",
+		"eslint/capitalized-comments": "off",
+		"eslint/func-style": "off",
+		"eslint/id-length": "off",
+		"eslint/init-declarations": "off",
+		"eslint/max-statements": "off",
+		"eslint/no-await-in-loop": "off",
+		"eslint/no-continue": "off",
+		"eslint/no-magic-numbers": "off",
+		"eslint/no-ternary": "off",
+		"eslint/sort-imports": "off",
+		"eslint/sort-keys": "off",
+		"typescript/consistent-type-definitions": "off",
+		"vitest/consistent-test-filename": "off",
+		"vitest/consistent-test-it": "off",
+		"vitest/no-importing-vitest-globals": "off",
+		"vitest/no-alias-methods": "off",
+		"vitest/no-unneeded-async-expect-function": "off",
+		"vitest/prefer-expect-assertions": "off",
+		"vitest/require-top-level-describe": "off"
+	},
+	"overrides": [
+		{
+			"files": ["*.spec.ts"],
+			"env": {
+				"vitest": true
+			}
+		}
+	]
+}
